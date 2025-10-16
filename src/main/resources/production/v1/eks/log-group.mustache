@@ -1,0 +1,10 @@
+name: /aws/eks/{{hosted:id}}-eks/cluster
+type: STANDARD
+retention: INFINITE
+removalPolicy: RETAIN
+tags:
+  "{{hosted:domain}}:resource-type": log-group
+  "{{hosted:domain}}:category": eks
+  "{{hosted:domain}}:type": logs
+  "{{hosted:domain}}:component": {{hosted:id}}-eks
+  "{{hosted:domain}}:part-of": "{{hosted:organization}}.{{hosted:name}}.{{hosted:alias}}"
