@@ -1,0 +1,71 @@
+common: null
+vpc: null
+eks:
+  name: spot-optimized-cluster
+  version: '1.28'
+  endpointAccess: PUBLIC
+  prune: true
+  rbac: null
+  tenancy: null
+  loggingTypes:
+    - api
+    - audit
+  vpcSubnetTypes:
+    - PRIVATE
+    - PUBLIC
+  nodeGroups: |
+    [
+      {
+        "name": "on-demand-baseline",
+        "instanceTypes": ["m5.large"],
+        "capacityType": "ON_DEMAND",
+        "minSize": 2,
+        "maxSize": 5,
+        "desiredSize": 3,
+        "labels": {
+          "capacity-type": "on-demand",
+          "critical": "true"
+        }
+      },
+      {
+        "name": "spot-workers",
+        "instanceTypes": ["t3.medium", "t3.large", "t3a.medium", "t3a.large"],
+        "capacityType": "SPOT",
+        "capacityRebalance": true,
+        "minSize": 5,
+        "maxSize": 100,
+        "desiredSize": 20,
+        "labels": {
+          "capacity-type": "spot",
+          "cost-optimized": "true"
+        },
+        "mixedInstancesPolicy": {
+          "instanceTypes": ["t3.medium", "t3.large", "t3a.medium", "t3a.large"],
+          "onDemandPercentage": 0,
+          "spotAllocationStrategy": "capacity-optimized"
+        }
+      },
+      {
+        "name": "spot-compute",
+        "instanceTypes": ["c5.large", "c5.xlarge", "c5a.large", "c5a.xlarge"],
+        "capacityType": "SPOT",
+        "capacityRebalance": true,
+        "minSize": 0,
+        "maxSize": 50,
+        "desiredSize": 10,
+        "labels": {
+          "workload": "compute-intensive",
+          "capacity-type": "spot"
+        }
+      }
+    ]
+  addons: '[{"name": "vpc-cni"}, {"name": "aws-node-termination-handler"}]'
+  queues: '{"queueUrl": "https://sqs.us-east-1.amazonaws.com/123456789012/spot-interruptions"}'
+  observability: null
+  annotations:
+    spot-enabled: 'true'
+    cost-optimization: aggressive
+  labels:
+    cluster-strategy: cost-optimized
+  tags:
+    CostOptimization: spot

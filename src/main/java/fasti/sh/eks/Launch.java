@@ -140,7 +140,7 @@ public class Launch {
     return results;
   }
 
-  private static String arnToBucketName(String arn) {
+  public static String arnToBucketName(String arn) {
     if (arn != null && arn.startsWith("arn:aws:s3::")) {
       var parts = arn.split(":");
       var resourcePart = parts[parts.length - 1];

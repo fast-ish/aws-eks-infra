@@ -11,3 +11,25 @@ updates:
       interval: "weekly"
       day: "monday"
       time: "09:00"
+    groups:
+      maven-plugins:
+        patterns:
+          - "*-maven-plugin"
+          - "maven-*-plugin"
+        update-types:
+          - "minor"
+          - "patch"
+      test-dependencies:
+        patterns:
+          - "junit*"
+          - "mockito*"
+        update-types:
+          - "minor"
+          - "patch"
+      production-dependencies:
+        patterns:
+          - "jackson*"
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
