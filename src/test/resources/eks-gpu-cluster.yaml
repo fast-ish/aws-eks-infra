@@ -1,0 +1,60 @@
+common: null
+vpc: null
+eks:
+  name: gpu-ml-cluster
+  version: '1.28'
+  endpointAccess: PUBLIC_AND_PRIVATE
+  prune: true
+  rbac: '{"enabled": true, "roles": ["ml-engineer", "data-scientist"]}'
+  tenancy: null
+  loggingTypes:
+    - api
+    - audit
+    - authenticator
+  vpcSubnetTypes:
+    - PRIVATE
+    - PUBLIC
+  nodeGroups: |
+    [
+      {
+        "name": "gpu-p3-workers",
+        "instanceTypes": ["p3.2xlarge", "p3.8xlarge"],
+        "minSize": 0,
+        "maxSize": 10,
+        "desiredSize": 2,
+        "labels": {
+          "workload": "training",
+          "gpu": "nvidia-v100"
+        },
+        "taints": [
+          {
+            "key": "nvidia.com/gpu",
+            "value": "true",
+            "effect": "NoSchedule"
+          }
+        ]
+      },
+      {
+        "name": "gpu-g5-inference",
+        "instanceTypes": ["g5.xlarge", "g5.2xlarge"],
+        "minSize": 1,
+        "maxSize": 20,
+        "desiredSize": 5,
+        "labels": {
+          "workload": "inference",
+          "gpu": "nvidia-a10g"
+        }
+      }
+    ]
+  addons: '[{"name": "vpc-cni", "version": "v1.15.0"}, {"name": "nvidia-device-plugin"}]'
+  queues: null
+  observability: '{"prometheus": {"enabled": true}, "grafana": {"enabled": true}}'
+  annotations:
+    gpu-enabled: 'true'
+    ml-platform: 'true'
+  labels:
+    cluster-type: ml
+    accelerator: nvidia
+  tags:
+    Project: MachineLearning
+    Budget: 2024-Q4
