@@ -1,0 +1,26 @@
+common: null
+vpc: null
+eks:
+  name: fargate-only-cluster
+  version: '1.28'
+  endpointAccess: PRIVATE
+  prune: false
+  rbac: null
+  tenancy: null
+  loggingTypes:
+    - api
+    - audit
+  vpcSubnetTypes:
+    - PRIVATE
+  nodeGroups: '[{"name": "fargate-profile", "selectors": [{"namespace": "default"}, {"namespace": "kube-system"}]}]'
+  addons: null
+  queues: null
+  observability: null
+  annotations:
+    fargate-enabled: 'true'
+    compute-type: fargate-only
+  labels:
+    workload-type: serverless
+  tags:
+    Environment: production
+    CostCenter: platform

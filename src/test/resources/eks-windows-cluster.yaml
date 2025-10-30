@@ -1,0 +1,65 @@
+common: null
+vpc: null
+eks:
+  name: windows-workloads-cluster
+  version: '1.28'
+  endpointAccess: PUBLIC_AND_PRIVATE
+  prune: false
+  rbac: null
+  tenancy: null
+  loggingTypes:
+    - api
+    - audit
+    - authenticator
+  vpcSubnetTypes:
+    - PRIVATE
+    - PUBLIC
+  nodeGroups: |
+    [
+      {
+        "name": "linux-system",
+        "instanceTypes": ["t3.large"],
+        "amiType": "AL2_x86_64",
+        "minSize": 2,
+        "maxSize": 5,
+        "desiredSize": 2,
+        "labels": {
+          "os": "linux",
+          "role": "system"
+        }
+      },
+      {
+        "name": "windows-workers",
+        "instanceTypes": ["m5.large", "m5.xlarge"],
+        "amiType": "WINDOWS_CORE_2019_x86_64",
+        "minSize": 2,
+        "maxSize": 10,
+        "desiredSize": 4,
+        "labels": {
+          "os": "windows",
+          "version": "2019"
+        }
+      },
+      {
+        "name": "windows-2022-workers",
+        "instanceTypes": ["m5.xlarge"],
+        "amiType": "WINDOWS_CORE_2022_x86_64",
+        "minSize": 1,
+        "maxSize": 5,
+        "desiredSize": 2,
+        "labels": {
+          "os": "windows",
+          "version": "2022"
+        }
+      }
+    ]
+  addons: '[{"name": "vpc-cni"}, {"name": "coredns"}]'
+  queues: null
+  observability: null
+  annotations:
+    windows-support: 'true'
+    hybrid-cluster: 'true'
+  labels:
+    os-support: mixed
+  tags:
+    WindowsWorkloads: 'true'

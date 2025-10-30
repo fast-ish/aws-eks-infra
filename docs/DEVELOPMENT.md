@@ -809,10 +809,67 @@ jobs:
       run: cdk synth
 ```
 
+### Dependency Management
+
+#### Latest Versions (Updated 2025-10-29)
+
+**Core Libraries**:
+- **Jackson**: 2.20.0
+- **JUnit**: 5.14.0
+- **Mockito**: 5.20.0
+
+**Maven Plugins**:
+- **maven-compiler-plugin**: 3.14.0
+- **exec-maven-plugin**: 3.6.2
+- **maven-surefire-plugin**: 3.5.4
+- **spotless-maven-plugin**: 3.0.0
+- **spotbugs-maven-plugin**: 4.9.8.1
+- **maven-pmd-plugin**: 3.28.0
+- **jacoco-maven-plugin**: 0.8.14
+- **maven-checkstyle-plugin**: 3.6.0
+- **dependency-check-maven**: 12.1.8
+- **maven-dependency-plugin**: 3.9.0
+- **license-maven-plugin**: 2.7.0
+- **versions-maven-plugin**: 2.19.1
+
+#### Dependabot Configuration
+
+This project uses Dependabot with grouped updates to minimize PR noise:
+
+```yaml
+# .github/dependabot.yml
+groups:
+  maven-plugins:        # All Maven plugins grouped together
+  test-dependencies:    # JUnit and Mockito grouped
+  production-dependencies: # Jackson and other prod deps grouped
+```
+
+**Benefits**:
+- Fewer PRs to review
+- Related updates bundled together
+- Minor and patch updates automatically grouped
+
+#### Updating Dependencies
+
+```bash
+# Check for available updates
+mvn versions:display-dependency-updates
+mvn versions:display-plugin-updates
+
+# Update dependencies to latest
+mvn versions:use-latest-versions
+
+# Update plugins to latest
+mvn versions:use-latest-releases -DallowSnapshots=false
+
+# Verify tests still pass
+mvn clean test
+```
+
 ### Maintenance
 
 #### Regular Maintenance Tasks
-- [ ] **Weekly**: Dependency updates
+- [ ] **Weekly**: Dependency updates (automated via Dependabot)
 - [ ] **Monthly**: Security patch review
 - [ ] **Quarterly**: Major version updates
 - [ ] **Annually**: Architecture review

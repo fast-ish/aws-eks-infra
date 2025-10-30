@@ -1,0 +1,155 @@
+common:
+  id: production-eks-cluster
+  account: '123456789012'
+  region: us-east-1
+  organization: acme-corp
+  name: Production EKS Platform
+  alias: prod-eks
+  environment: production
+  version: 2.5.0
+  domain: eks.acme-corp.com
+  tags:
+    Environment: production
+    Team: platform-engineering
+    CostCenter: engineering
+    Compliance: sox-hipaa
+    ManagedBy: cdk
+vpc:
+  name: production-vpc
+  cidr: 10.0.0.0/16
+  vpcEndpoints: |
+    [
+      {"service": "s3", "type": "Gateway"},
+      {"service": "dynamodb", "type": "Gateway"},
+      {"service": "ecr.api", "type": "Interface"},
+      {"service": "ecr.dkr", "type": "Interface"}
+    ]
+  natGateways: 3
+  privateSubnetCidrs:
+    - 10.0.0.0/20
+    - 10.0.16.0/20
+    - 10.0.32.0/20
+  publicSubnetCidrs:
+    - 10.0.128.0/20
+    - 10.0.144.0/20
+    - 10.0.160.0/20
+  availabilityZones:
+    - us-east-1a
+    - us-east-1b
+    - us-east-1c
+  defaultInstanceTenancy: DEFAULT
+  createInternetGateway: true
+  enableDnsHostnames: true
+  enableDnsSupport: true
+  tags:
+    Name: production-vpc
+    Environment: production
+eks:
+  name: production-cluster
+  version: '1.28'
+  endpointAccess: PUBLIC_AND_PRIVATE
+  prune: true
+  rbac: |
+    {
+      "enabled": true,
+      "roles": [
+        {"name": "admin", "groups": ["system:masters"]},
+        {"name": "developer", "groups": ["developers"]},
+        {"name": "viewer", "groups": ["viewers"]}
+      ]
+    }
+  tenancy: '{"multiTenant": true, "tenants": ["team-a", "team-b", "team-c"]}'
+  loggingTypes:
+    - api
+    - audit
+    - authenticator
+    - controllerManager
+    - scheduler
+  vpcSubnetTypes:
+    - PRIVATE
+    - PUBLIC
+  nodeGroups: |
+    [
+      {
+        "name": "system",
+        "instanceTypes": ["t3.large"],
+        "minSize": 3,
+        "maxSize": 6,
+        "desiredSize": 3,
+        "labels": {
+          "role": "system",
+          "critical": "true"
+        },
+        "taints": [
+          {
+            "key": "CriticalAddonsOnly",
+            "value": "true",
+            "effect": "NoSchedule"
+          }
+        ]
+      },
+      {
+        "name": "workers",
+        "instanceTypes": ["m5.xlarge", "m5a.xlarge"],
+        "minSize": 5,
+        "maxSize": 50,
+        "desiredSize": 15,
+        "capacityType": "ON_DEMAND",
+        "labels": {
+          "role": "worker",
+          "workload": "general"
+        }
+      },
+      {
+        "name": "spot-workers",
+        "instanceTypes": ["m5.large", "m5a.large", "m5n.large"],
+        "minSize": 10,
+        "maxSize": 100,
+        "desiredSize": 30,
+        "capacityType": "SPOT",
+        "capacityRebalance": true,
+        "labels": {
+          "role": "worker",
+          "workload": "batch",
+          "capacity-type": "spot"
+        }
+      }
+    ]
+  addons: |
+    [
+      {"name": "vpc-cni", "version": "v1.15.0-eksbuild.1"},
+      {"name": "coredns", "version": "v1.10.1-eksbuild.1"},
+      {"name": "kube-proxy", "version": "v1.28.2-eksbuild.1"},
+      {"name": "aws-ebs-csi-driver", "version": "v1.25.0-eksbuild.1"}
+    ]
+  queues: '{"queueUrl": "https://sqs.us-east-1.amazonaws.com/123456789012/cluster-events"}'
+  observability: |
+    {
+      "prometheus": {
+        "enabled": true,
+        "retention": "15d",
+        "storageClass": "gp3"
+      },
+      "grafana": {
+        "enabled": true,
+        "adminPassword": "changeme123"
+      },
+      "containerInsights": {
+        "enabled": true
+      }
+    }
+  annotations:
+    cluster-version: '1.28'
+    managed-by: cdk
+    encryption: kms
+    kms-key-arn: arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+    oidc-enabled: 'true'
+    oidc-provider-arn: arn:aws:iam::123456789012:oidc-provider/oidc.eks.us-east-1.amazonaws.com/id/EXAMPLE
+  labels:
+    app: eks
+    tier: infrastructure
+    environment: production
+  tags:
+    Project: Platform
+    Budget: 2024-Q4
+    Team: platform-engineering
