@@ -1,0 +1,39 @@
+common: null
+vpc:
+  name: production-vpc
+  cidr: 10.0.0.0/16
+  vpcEndpoints: |
+    [
+      {"service": "s3", "type": "Gateway"},
+      {"service": "dynamodb", "type": "Gateway"},
+      {"service": "ecr.api", "type": "Interface"},
+      {"service": "ecr.dkr", "type": "Interface"},
+      {"service": "ec2", "type": "Interface"},
+      {"service": "logs", "type": "Interface"},
+      {"service": "sts", "type": "Interface"},
+      {"service": "elasticloadbalancing", "type": "Interface"},
+      {"service": "autoscaling", "type": "Interface"}
+    ]
+  natGateways: 3
+  privateSubnetCidrs:
+    - 10.0.0.0/20
+    - 10.0.16.0/20
+    - 10.0.32.0/20
+  publicSubnetCidrs:
+    - 10.0.128.0/20
+    - 10.0.144.0/20
+    - 10.0.160.0/20
+  availabilityZones:
+    - us-east-1a
+    - us-east-1b
+    - us-east-1c
+  defaultInstanceTenancy: DEFAULT
+  createInternetGateway: true
+  enableDnsHostnames: true
+  enableDnsSupport: true
+  tags:
+    Name: production-vpc
+    Environment: production
+    Tier: network
+    ManagedBy: cdk
+eks: null

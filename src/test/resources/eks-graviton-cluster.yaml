@@ -1,0 +1,51 @@
+common: null
+vpc: null
+eks:
+  name: graviton-arm-cluster
+  version: '1.28'
+  endpointAccess: PUBLIC
+  prune: false
+  rbac: null
+  tenancy: null
+  loggingTypes:
+    - api
+    - audit
+  vpcSubnetTypes:
+    - PRIVATE
+  nodeGroups: |
+    [
+      {
+        "name": "graviton2-workers",
+        "instanceTypes": ["m6g.xlarge", "c6g.large", "r6g.xlarge"],
+        "amiType": "AL2_ARM_64",
+        "minSize": 2,
+        "maxSize": 50,
+        "desiredSize": 10,
+        "labels": {
+          "architecture": "arm64",
+          "processor": "graviton2"
+        }
+      },
+      {
+        "name": "graviton3-workers",
+        "instanceTypes": ["c7g.xlarge", "m7g.large"],
+        "amiType": "AL2_ARM_64",
+        "minSize": 1,
+        "maxSize": 20,
+        "desiredSize": 5,
+        "labels": {
+          "architecture": "arm64",
+          "processor": "graviton3"
+        }
+      }
+    ]
+  addons: '[{"name": "vpc-cni", "version": "v1.15.0"}, {"name": "coredns", "version": "v1.10.1"}]'
+  queues: null
+  observability: null
+  annotations:
+    architecture: arm64
+    cost-optimized: 'true'
+  labels:
+    processor-family: graviton
+  tags:
+    CostOptimization: 'true'

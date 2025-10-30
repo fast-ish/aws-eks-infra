@@ -8,35 +8,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Initial release of CDK Common Library
-- 200+ AWS CDK construct classes for Java
-- Comprehensive CI/CD with GitHub Actions
-- Static analysis integration (Checkstyle, PMD, SpotBugs, OWASP)
-- Professional release workflow with customizable release notes
-- Complete documentation suite (Usage, Release Guide, Commit Conventions)
-- Maven build configuration with Java 21 support
-- VPC and networking constructs with security best practices
-- EKS cluster management with add-ons (ALB, Cert Manager, Grafana, Karpenter)
-- API Gateway with validation, authorization, and usage plans
-- RDS and Aurora database constructs
-- MSK Serverless for Apache Kafka
-- S3 and CloudFront for static content
-- Lambda and Fargate serverless compute
-- Cognito for authentication
-- SQS, SNS, EventBridge for event-driven architecture
-- Type-safe Java constructs with full IDE support
-- 85% test coverage with JUnit 5
-
-### Changed
-
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
+- Initial release of AWS EKS Infrastructure with AWS CDK
+- Production-ready EKS cluster (Kubernetes 1.34) with complete observability stack
+- Multi-AZ VPC with public/private subnets
+- Comprehensive CI/CD with GitHub Actions workflows
+- EKS managed addons (VPC CNI, EBS CSI, CoreDNS, Kube Proxy, Pod Identity Agent, CloudWatch Observability)
+- Helm-based addon management (Karpenter, Cert-Manager, AWS Load Balancer Controller, Grafana K8s Monitoring)
+- Advanced autoscaling with Karpenter and spot instance support
+- Complete observability with Grafana Cloud integration
+- Security-focused configuration (KMS encryption, RBAC, Pod Identity)
+- Bottlerocket AMI for worker nodes
+- Configuration-driven infrastructure with Mustache templating
+- Comprehensive test suite (137 tests) for configuration validation
+- Static analysis integration (Checkstyle, PMD, SpotBugs, OWASP Dependency-Check)
+- AI_CONTEXT.md documentation for AI assistants
+- Dependabot configuration with grouped dependency updates
+- Complete documentation suite (Architecture, Development, Operations, Security guides)
 
 ---
 
-*Note: For detailed release notes of each version, see [GitHub Releases](https://github.com/tinstafl/cdk-common/releases)*
+*Note: For detailed release notes of each version, see [GitHub Releases](https://github.com/fast-ish/cdk-common/releases)*
