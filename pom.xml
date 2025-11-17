@@ -15,7 +15,7 @@
         <cdk.common.version>1.0.0-SNAPSHOT</cdk.common.version>
         <jackson.version>2.20.0</jackson.version>
 
-        <junit.version>6.0.0</junit.version>
+        <junit.version>6.0.1</junit.version>
         <mockito.version>5.20.0</mockito.version>
 
         <maven.compiler.plugin.version>3.14.1</maven.compiler.plugin.version>
@@ -32,7 +32,7 @@
         <maven.dependency.plugin.version>3.9.0</maven.dependency.plugin.version>
         <maven.license.plugin.version>2.7.0</maven.license.plugin.version>
         <versions.maven.plugin.version>2.19.1</versions.maven.plugin.version>
-        <dependency.check.maven.version>12.1.8</dependency.check.maven.version>
+        <dependency.check.maven.version>12.1.9</dependency.check.maven.version>
 
         <maven.jxr.plugin.version>3.6.0</maven.jxr.plugin.version>
 
