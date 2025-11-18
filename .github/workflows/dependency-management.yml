@@ -42,27 +42,27 @@ jobs:
       if: steps.metadata.outputs.update-type == 'version-update:semver-patch'
       run: |
         echo "adding label for patch update"
-        gh pr edit "$PR_URL" --add-label "patch-update"
+        gh pr edit "$PR_URL" --add-label "patch"
         echo "✅ patch update - ready for manual review and merge"
       env:
         PR_URL: ${{ github.event.pull_request.html_url }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    
+
     - name: add label for minor updates
       if: steps.metadata.outputs.update-type == 'version-update:semver-minor'
       run: |
         echo "adding review label for minor update"
-        gh pr edit "$PR_URL" --add-label "needs-review"
+        gh pr edit "$PR_URL" --add-label "minor,needs-review"
         echo "⚠️ minor update requires manual review"
       env:
         PR_URL: ${{ github.event.pull_request.html_url }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    
+
     - name: add label for major updates
       if: steps.metadata.outputs.update-type == 'version-update:semver-major'
       run: |
         echo "adding labels for major update"
-        gh pr edit "$PR_URL" --add-label "major-update,needs-review"
+        gh pr edit "$PR_URL" --add-label "major,needs-review"
         echo "⚠️ major update requires careful review"
       env:
         PR_URL: ${{ github.event.pull_request.html_url }}
