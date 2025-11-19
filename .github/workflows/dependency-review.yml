@@ -15,11 +15,12 @@ jobs:
 
     steps:
     - name: checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: dependency review
       uses: actions/dependency-review-action@v4
       with:
         fail-on-severity: moderate
         comment-summary-in-pr: always
-        deny-licenses: GPL-2.0, GPL-3.0
+        license-check: true
+        allow-licenses: MIT, Apache-2.0, BSD-3-Clause, ISC, BSD-2-Clause

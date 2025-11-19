@@ -29,7 +29,7 @@ managed:
           "{{hosted:domain}}:part-of": "{{hosted:organization}}.{{hosted:name}}.{{hosted:alias}}"
   awsEbsCsi:
     name: aws-ebs-csi-driver
-    version: v1.51.1-eksbuild.1
+    version: v1.52.1-eksbuild.1
     preserveOnDelete: false
     resolveConflicts: preserve
     serviceAccount:
@@ -70,7 +70,7 @@ managed:
       removalPolicy: destroy
   kubeProxy:
     name: kube-proxy
-    version: v1.34.0-eksbuild.4
+    version: v1.34.1-eksbuild.2
     preserveOnDelete: false
     resolveConflicts: overwrite
   coreDns:
@@ -80,7 +80,7 @@ managed:
     resolveConflicts: overwrite
   podIdentityAgent:
     name: eks-pod-identity-agent
-    version: v1.3.9-eksbuild.3
+    version: v1.3.9-eksbuild.5
     preserveOnDelete: false
     resolveConflicts: overwrite
   containerInsights:
@@ -132,7 +132,7 @@ karpenter:
     name: karpenter
     repository: oci://public.ecr.aws/karpenter/karpenter
     release: karpenter
-    version: 1.8.1
+    version: 1.8.2
     namespace: kube-system
     values: helm/karpenter.mustache
   podIdentity:
@@ -175,7 +175,7 @@ awsLoadBalancer:
     name: aws-load-balancer-controller
     repository: https://aws.github.io/eks-charts
     release: aws-load-balancer-controller
-    version: 1.14.1
+    version: 1.15.0
     namespace: aws-load-balancer
     values: helm/aws-load-balancer.mustache
   serviceAccount:
@@ -207,7 +207,7 @@ alloyOperator:
     name: alloy-operator
     repository: https://grafana.github.io/helm-charts
     release: alloy-operator
-    version: 0.3.9
+    version: 0.3.12
     namespace: monitoring
     values: helm/alloy-operator.mustache
   secret: {{hosted:eks:grafana:secret}}
@@ -216,7 +216,7 @@ grafana:
     name: k8s-monitoring
     repository: https://grafana.github.io/helm-charts
     release: k8s-monitoring
-    version: 3.5.1
+    version: 3.5.7
     namespace: monitoring
     values: helm/grafana.mustache
   secret: {{hosted:eks:grafana:secret}}
