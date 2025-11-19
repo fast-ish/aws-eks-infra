@@ -207,7 +207,7 @@ alloyOperator:
     name: alloy-operator
     repository: https://grafana.github.io/helm-charts
     release: alloy-operator
-    version: 0.3.9
+    version: 0.3.12
     namespace: monitoring
     values: helm/alloy-operator.mustache
   secret: {{hosted:eks:grafana:secret}}
@@ -216,7 +216,7 @@ grafana:
     name: k8s-monitoring
     repository: https://grafana.github.io/helm-charts
     release: k8s-monitoring
-    version: 3.5.1
+    version: 3.5.7
     namespace: monitoring
     values: helm/grafana.mustache
   secret: {{hosted:eks:grafana:secret}}
