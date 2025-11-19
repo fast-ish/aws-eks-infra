@@ -1,0 +1,103 @@
+$schema: https://docs.renovatebot.com/renovate-schema.json
+
+extends:
+  - config:recommended
+
+schedule:
+  - before 6am on monday
+
+timezone: UTC
+prConcurrentLimit: 4
+prHourlyLimit: 3
+separateMinorPatch: true
+
+ignoreDeps:
+  - fastish:cdk-common
+
+customManagers:
+  - customType: regex
+    fileMatch:
+      - ^src/main/resources/.*/eks/addons\.mustache$
+    matchStrings:
+      - 'name: cert-manager[\s\S]*?repository: https://charts\.jetstack\.io[\s\S]*?release: cert-manager[\s\S]*?version: (?<currentValue>v[0-9]+\.[0-9]+\.[0-9]+)'
+    datasourceTemplate: helm
+    registryUrlTemplate: https://charts.jetstack.io
+    depNameTemplate: cert-manager
+
+  - customType: regex
+    fileMatch:
+      - ^src/main/resources/.*/eks/addons\.mustache$
+    matchStrings:
+      - 'name: secrets-store-csi-driver-provider-aws[\s\S]*?repository: https://aws\.github\.io/secrets-store-csi-driver-provider-aws[\s\S]*?release: aws-secrets[\s\S]*?version: (?<currentValue>[0-9]+\.[0-9]+\.[0-9]+)'
+    datasourceTemplate: helm
+    registryUrlTemplate: https://aws.github.io/secrets-store-csi-driver-provider-aws
+    depNameTemplate: secrets-store-csi-driver-provider-aws
+
+  - customType: regex
+    fileMatch:
+      - ^src/main/resources/.*/eks/addons\.mustache$
+    matchStrings:
+      - 'name: karpenter[\s\S]*?repository: oci://public\.ecr\.aws/karpenter/karpenter[\s\S]*?release: karpenter[\s\S]*?version: (?<currentValue>[0-9]+\.[0-9]+\.[0-9]+)'
+    datasourceTemplate: github-releases
+    depNameTemplate: aws/karpenter-provider-aws
+    extractVersionTemplate: ^v(?<version>.*)$
+
+  - customType: regex
+    fileMatch:
+      - ^src/main/resources/.*/eks/addons\.mustache$
+    matchStrings:
+      - 'name: aws-load-balancer-controller[\s\S]*?repository: https://aws\.github\.io/eks-charts[\s\S]*?release: aws-load-balancer-controller[\s\S]*?version: (?<currentValue>[0-9]+\.[0-9]+\.[0-9]+)'
+    datasourceTemplate: helm
+    registryUrlTemplate: https://aws.github.io/eks-charts
+    depNameTemplate: aws-load-balancer-controller
+
+  - customType: regex
+    fileMatch:
+      - ^src/main/resources/.*/eks/addons\.mustache$
+    matchStrings:
+      - 'name: alloy-operator[\s\S]*?repository: https://grafana\.github\.io/helm-charts[\s\S]*?release: alloy-operator[\s\S]*?version: (?<currentValue>[0-9]+\.[0-9]+\.[0-9]+)'
+    datasourceTemplate: helm
+    registryUrlTemplate: https://grafana.github.io/helm-charts
+    depNameTemplate: alloy-operator
+
+  - customType: regex
+    fileMatch:
+      - ^src/main/resources/.*/eks/addons\.mustache$
+    matchStrings:
+      - 'name: k8s-monitoring[\s\S]*?repository: https://grafana\.github\.io/helm-charts[\s\S]*?release: k8s-monitoring[\s\S]*?version: (?<currentValue>[0-9]+\.[0-9]+\.[0-9]+)'
+    datasourceTemplate: helm
+    registryUrlTemplate: https://grafana.github.io/helm-charts
+    depNameTemplate: k8s-monitoring
+
+packageRules:
+  - description: Ignore internal fastish dependencies
+    matchPackageNames:
+      - fastish:cdk-common
+    enabled: false
+
+  - description: Storage & Security Layer - cert-manager and secrets-store
+    matchPackageNames:
+      - cert-manager
+      - secrets-store-csi-driver-provider-aws
+    groupName: storage-security
+    prPriority: 8
+    schedule:
+      - before 6am on monday
+
+  - description: Workload Management Layer - karpenter and load balancer
+    matchPackageNames:
+      - aws/karpenter-provider-aws
+      - aws-load-balancer-controller
+    groupName: workload-management
+    prPriority: 6
+    schedule:
+      - after 6am on monday
+
+  - description: Observability Layer - grafana monitoring
+    matchPackageNames:
+      - alloy-operator
+      - k8s-monitoring
+    groupName: observability
+    prPriority: 4
+    schedule:
+      - before 6am on tuesday
