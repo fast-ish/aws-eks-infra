@@ -29,7 +29,7 @@ managed:
           "{{hosted:domain}}:part-of": "{{hosted:organization}}.{{hosted:name}}.{{hosted:alias}}"
   awsEbsCsi:
     name: aws-ebs-csi-driver
-    version: v1.51.1-eksbuild.1
+    version: v1.52.1-eksbuild.1
     preserveOnDelete: false
     resolveConflicts: preserve
     serviceAccount:
@@ -70,7 +70,7 @@ managed:
       removalPolicy: destroy
   kubeProxy:
     name: kube-proxy
-    version: v1.34.0-eksbuild.4
+    version: v1.34.1-eksbuild.2
     preserveOnDelete: false
     resolveConflicts: overwrite
   coreDns:
@@ -80,7 +80,7 @@ managed:
     resolveConflicts: overwrite
   podIdentityAgent:
     name: eks-pod-identity-agent
-    version: v1.3.9-eksbuild.3
+    version: v1.3.9-eksbuild.5
     preserveOnDelete: false
     resolveConflicts: overwrite
   containerInsights:
