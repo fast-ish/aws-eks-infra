@@ -1,0 +1,164 @@
+name: Check EKS Addon Updates
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'  # Run at 6am UTC every Monday
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+
+jobs:
+  check-addons:
+    name: check for eks addon updates
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v5
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::351619759866:role/fastish-github-actions-operator
+          aws-region: us-west-2
+
+      - name: check for addon updates
+        id: check
+        run: |
+          ADDONS_FILE="src/main/resources/production/v1/eks/addons.mustache"
+          EKS_VERSION="1.34"
+          UPDATES_FOUND=false
+          UPDATE_SUMMARY=""
+
+          # Function to get latest addon version
+          get_latest_version() {
+            local addon_name=$1
+            aws eks describe-addon-versions \
+              --kubernetes-version "$EKS_VERSION" \
+              --addon-name "$addon_name" \
+              --query 'addons[0].addonVersions[0].addonVersion' \
+              --output text
+          }
+
+          # Function to get current version from file
+          get_current_version() {
+            local addon_field=$1
+            awk "/^  ${addon_field}:/{found=1} found && /version:/{print \$2; exit}" "$ADDONS_FILE"
+          }
+
+          # Check each addon
+          declare -A ADDONS=(
+            ["awsVpcCni"]="vpc-cni"
+            ["coreDns"]="coredns"
+            ["kubeProxy"]="kube-proxy"
+            ["podIdentityAgent"]="eks-pod-identity-agent"
+            ["awsEbsCsi"]="aws-ebs-csi-driver"
+            ["containerInsights"]="amazon-cloudwatch-observability"
+          )
+
+          for field in "${!ADDONS[@]}"; do
+            addon="${ADDONS[$field]}"
+            current=$(get_current_version "$field")
+            latest=$(get_latest_version "$addon")
+
+            if [ "$current" != "$latest" ]; then
+              echo "Update available for $addon: $current -> $latest"
+              UPDATES_FOUND=true
+              UPDATE_SUMMARY="${UPDATE_SUMMARY}- \`$addon\`: $current → $latest\n"
+            else
+              echo "$addon is up to date: $current"
+            fi
+          done
+
+          echo "updates_found=$UPDATES_FOUND" >> $GITHUB_OUTPUT
+          echo -e "update_summary<<EOF" >> $GITHUB_OUTPUT
+          echo -e "$UPDATE_SUMMARY" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: no updates needed
+        if: steps.check.outputs.updates_found != 'true'
+        run: |
+          echo "✓ All EKS addons are up to date"
+          exit 0
+
+      - name: create update pr
+        if: steps.check.outputs.updates_found == 'true'
+        run: |
+          BRANCH="eks-addon-updates-$(date +%Y%m%d)"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git checkout -b "$BRANCH"
+
+          ADDONS_FILE="src/main/resources/production/v1/eks/addons.mustache"
+          EKS_VERSION="1.34"
+
+          # Function to update version in file
+          update_version() {
+            local field=$1
+            local new_version=$2
+            # Use awk to update the specific version line after the field
+            awk -v field="$field" -v ver="$new_version" '
+              /^  / && $0 ~ "^  "field":$" {found=1}
+              found && /^    version:/ {$2=ver; found=0}
+              {print}
+            ' "$ADDONS_FILE" > "${ADDONS_FILE}.tmp"
+            mv "${ADDONS_FILE}.tmp" "$ADDONS_FILE"
+          }
+
+          # Update each addon
+          declare -A ADDONS=(
+            ["awsVpcCni"]="vpc-cni"
+            ["coreDns"]="coredns"
+            ["kubeProxy"]="kube-proxy"
+            ["podIdentityAgent"]="eks-pod-identity-agent"
+            ["awsEbsCsi"]="aws-ebs-csi-driver"
+            ["containerInsights"]="amazon-cloudwatch-observability"
+          )
+
+          for field in "${!ADDONS[@]}"; do
+            addon="${ADDONS[$field]}"
+            latest=$(aws eks describe-addon-versions \
+              --kubernetes-version "$EKS_VERSION" \
+              --addon-name "$addon" \
+              --query 'addons[0].addonVersions[0].addonVersion' \
+              --output text)
+            update_version "$field" "$latest"
+          done
+
+          # Check if there are actual changes
+          if git diff --quiet "$ADDONS_FILE"; then
+            echo "No changes detected in $ADDONS_FILE after updates"
+            echo "This likely means the versions are already current"
+            exit 0
+          fi
+
+          git add "$ADDONS_FILE"
+          git commit -m "chore(deps): update eks managed addon versions"
+          git push origin "$BRANCH"
+
+          # Create PR
+          gh pr create \
+            --title "chore(deps): update eks managed addon versions" \
+            --body "$(cat <<EOF
+          ## EKS Managed Addon Updates
+
+          ${{ steps.check.outputs.update_summary }}
+
+          This PR updates EKS managed addons to their latest compatible versions for Kubernetes $EKS_VERSION.
+
+          **Addons Updated:**
+          ${{ steps.check.outputs.update_summary }}
+
+          ---
+          *Automated update check run at $(date -u +"%Y-%m-%d %H:%M:%S UTC")*
+          EOF
+          )" \
+            --base main \
+            --head "$BRANCH"
+        env:
+          GH_TOKEN: ${{ github.token }}
