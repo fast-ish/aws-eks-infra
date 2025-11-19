@@ -16,8 +16,8 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": [
-        "^src/main/resources/.*/eks/addons\\.mustache$"
+      "managerFilePatterns": [
+        "/^src/main/resources/.*/eks/addons\\.mustache$/"
       ],
       "matchStrings": [
         "name: cert-manager[\\s\\S]*?repository: https://charts\\.jetstack\\.io[\\s\\S]*?release: cert-manager[\\s\\S]*?version: (?<currentValue>v[0-9]+\\.[0-9]+\\.[0-9]+)"
@@ -28,8 +28,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^src/main/resources/.*/eks/addons\\.mustache$"
+      "managerFilePatterns": [
+        "/^src/main/resources/.*/eks/addons\\.mustache$/"
       ],
       "matchStrings": [
         "name: secrets-store-csi-driver-provider-aws[\\s\\S]*?repository: https://aws\\.github\\.io/secrets-store-csi-driver-provider-aws[\\s\\S]*?release: aws-secrets[\\s\\S]*?version: (?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)"
@@ -40,8 +40,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^src/main/resources/.*/eks/addons\\.mustache$"
+      "managerFilePatterns": [
+        "/^src/main/resources/.*/eks/addons\\.mustache$/"
       ],
       "matchStrings": [
         "name: karpenter[\\s\\S]*?repository: oci://public\\.ecr\\.aws/karpenter/karpenter[\\s\\S]*?release: karpenter[\\s\\S]*?version: (?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)"
@@ -52,8 +52,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^src/main/resources/.*/eks/addons\\.mustache$"
+      "managerFilePatterns": [
+        "/^src/main/resources/.*/eks/addons\\.mustache$/"
       ],
       "matchStrings": [
         "name: aws-load-balancer-controller[\\s\\S]*?repository: https://aws\\.github\\.io/eks-charts[\\s\\S]*?release: aws-load-balancer-controller[\\s\\S]*?version: (?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)"
@@ -64,8 +64,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^src/main/resources/.*/eks/addons\\.mustache$"
+      "managerFilePatterns": [
+        "/^src/main/resources/.*/eks/addons\\.mustache$/"
       ],
       "matchStrings": [
         "name: alloy-operator[\\s\\S]*?repository: https://grafana\\.github\\.io/helm-charts[\\s\\S]*?release: alloy-operator[\\s\\S]*?version: (?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)"
@@ -76,8 +76,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^src/main/resources/.*/eks/addons\\.mustache$"
+      "managerFilePatterns": [
+        "/^src/main/resources/.*/eks/addons\\.mustache$/"
       ],
       "matchStrings": [
         "name: k8s-monitoring[\\s\\S]*?repository: https://grafana\\.github\\.io/helm-charts[\\s\\S]*?release: k8s-monitoring[\\s\\S]*?version: (?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)"
