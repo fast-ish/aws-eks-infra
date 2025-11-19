@@ -16,8 +16,8 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": [
-        "^src/main/resources/.*/eks/addons\\.mustache$"
+      "managerFilePatterns": [
+        "/^src/main/resources/.*/eks/addons\\.mustache$/"
       ],
       "matchStrings": [
         "name: vpc-cni\\s+version: (?<currentValue>v[0-9]+\\.[0-9]+\\.[0-9]+-eksbuild\\.[0-9]+)"
@@ -28,8 +28,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^src/main/resources/.*/eks/addons\\.mustache$"
+      "managerFilePatterns": [
+        "/^src/main/resources/.*/eks/addons\\.mustache$/"
       ],
       "matchStrings": [
         "name: coredns\\s+version: (?<currentValue>v[0-9]+\\.[0-9]+\\.[0-9]+-eksbuild\\.[0-9]+)"
@@ -40,8 +40,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^src/main/resources/.*/eks/addons\\.mustache$"
+      "managerFilePatterns": [
+        "/^src/main/resources/.*/eks/addons\\.mustache$/"
       ],
       "matchStrings": [
         "name: kube-proxy\\s+version: (?<currentValue>v[0-9]+\\.[0-9]+\\.[0-9]+-eksbuild\\.[0-9]+)"
@@ -52,8 +52,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^src/main/resources/.*/eks/addons\\.mustache$"
+      "managerFilePatterns": [
+        "/^src/main/resources/.*/eks/addons\\.mustache$/"
       ],
       "matchStrings": [
         "name: eks-pod-identity-agent\\s+version: (?<currentValue>v[0-9]+\\.[0-9]+\\.[0-9]+-eksbuild\\.[0-9]+)"
@@ -64,8 +64,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^src/main/resources/.*/eks/addons\\.mustache$"
+      "managerFilePatterns": [
+        "/^src/main/resources/.*/eks/addons\\.mustache$/"
       ],
       "matchStrings": [
         "name: aws-ebs-csi-driver\\s+version: (?<currentValue>v[0-9]+\\.[0-9]+\\.[0-9]+-eksbuild\\.[0-9]+)"
@@ -76,8 +76,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^src/main/resources/.*/eks/addons\\.mustache$"
+      "managerFilePatterns": [
+        "/^src/main/resources/.*/eks/addons\\.mustache$/"
       ],
       "matchStrings": [
         "name: cert-manager\\s+repository: https://charts\\.jetstack\\.io\\s+release: cert-manager\\s+version: (?<currentValue>v[0-9]+\\.[0-9]+\\.[0-9]+)"
@@ -88,8 +88,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^src/main/resources/.*/eks/addons\\.mustache$"
+      "managerFilePatterns": [
+        "/^src/main/resources/.*/eks/addons\\.mustache$/"
       ],
       "matchStrings": [
         "name: secrets-store-csi-driver-provider-aws\\s+repository: https://aws\\.github\\.io/secrets-store-csi-driver-provider-aws\\s+release: aws-secrets\\s+version: (?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)"
@@ -100,8 +100,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^src/main/resources/.*/eks/addons\\.mustache$"
+      "managerFilePatterns": [
+        "/^src/main/resources/.*/eks/addons\\.mustache$/"
       ],
       "matchStrings": [
         "name: karpenter\\s+repository: oci://public\\.ecr\\.aws/karpenter/karpenter\\s+release: karpenter\\s+version: (?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)"
@@ -112,8 +112,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^src/main/resources/.*/eks/addons\\.mustache$"
+      "managerFilePatterns": [
+        "/^src/main/resources/.*/eks/addons\\.mustache$/"
       ],
       "matchStrings": [
         "name: aws-load-balancer-controller\\s+repository: https://aws\\.github\\.io/eks-charts\\s+release: aws-load-balancer-controller\\s+version: (?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)"
@@ -124,8 +124,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^src/main/resources/.*/eks/addons\\.mustache$"
+      "managerFilePatterns": [
+        "/^src/main/resources/.*/eks/addons\\.mustache$/"
       ],
       "matchStrings": [
         "name: alloy-operator\\s+repository: https://grafana\\.github\\.io/helm-charts\\s+release: alloy-operator\\s+version: (?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)"
@@ -136,8 +136,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^src/main/resources/.*/eks/addons\\.mustache$"
+      "managerFilePatterns": [
+        "/^src/main/resources/.*/eks/addons\\.mustache$/"
       ],
       "matchStrings": [
         "name: k8s-monitoring\\s+repository: https://grafana\\.github\\.io/helm-charts\\s+release: k8s-monitoring\\s+version: (?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)"
@@ -148,8 +148,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^src/main/resources/.*/eks/addons\\.mustache$"
+      "managerFilePatterns": [
+        "/^src/main/resources/.*/eks/addons\\.mustache$/"
       ],
       "matchStrings": [
         "name: amazon-cloudwatch-observability\\s+version: (?<currentValue>v[0-9]+\\.[0-9]+\\.[0-9]+-eksbuild\\.[0-9]+)"
@@ -162,7 +162,9 @@
   "packageRules": [
     {
       "description": "Ignore internal fastish dependencies",
-      "matchPackageNames": ["fastish:cdk-common"],
+      "matchPackageNames": [
+        "fastish:cdk-common"
+      ],
       "enabled": false
     },
     {
@@ -175,7 +177,9 @@
       ],
       "groupName": "k8s-foundation",
       "prPriority": 10,
-      "schedule": ["before 6am on monday"]
+      "schedule": [
+        "before 6am on monday"
+      ]
     },
     {
       "description": "Storage & Security Layer - Requires foundation components",
@@ -186,7 +190,9 @@
       ],
       "groupName": "storage-security",
       "prPriority": 8,
-      "schedule": ["after 6am on monday"]
+      "schedule": [
+        "after 6am on monday"
+      ]
     },
     {
       "description": "Workload Management Layer - Requires storage and security",
@@ -196,7 +202,9 @@
       ],
       "groupName": "workload-management",
       "prPriority": 6,
-      "schedule": ["before 6am on tuesday"]
+      "schedule": [
+        "before 6am on tuesday"
+      ]
     },
     {
       "description": "Observability Layer - Update last",
@@ -207,7 +215,9 @@
       ],
       "groupName": "observability",
       "prPriority": 4,
-      "schedule": ["before 6am on wednesday"]
+      "schedule": [
+        "before 6am on wednesday"
+      ]
     }
   ]
 }
