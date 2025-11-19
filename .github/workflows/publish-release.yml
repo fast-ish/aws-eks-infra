@@ -107,7 +107,7 @@ jobs:
         run: mvn test -B
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: release-artifacts
           path: |
@@ -128,7 +128,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Download artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: release-artifacts
           path: ./release-artifacts
