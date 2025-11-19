@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base"
+    "config:recommended"
   ],
   "schedule": [
     "before 6am on monday"
@@ -13,7 +13,9 @@
   "packageRules": [
     {
       "description": "Foundation Layer - Kubernetes core addons update first",
-      "matchFileNames": ["**/eks/addons.mustache"],
+      "matchFileNames": [
+        "**/eks/addons.mustache"
+      ],
       "matchStrings": [
         "name: vpc-cni\\s+version: (?<currentValue>v[0-9]+\\.[0-9]+\\.[0-9]+-eksbuild\\.[0-9]+)",
         "name: coredns\\s+version: (?<currentValue>v[0-9]+\\.[0-9]+\\.[0-9]+-eksbuild\\.[0-9]+)",
@@ -22,13 +24,17 @@
       ],
       "groupName": "k8s-foundation",
       "prPriority": 10,
-      "schedule": ["before 6am on monday"],
+      "schedule": [
+        "before 6am on monday"
+      ],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "kubernetes/kubernetes"
     },
     {
       "description": "VPC CNI specific configuration",
-      "matchFileNames": ["**/eks/addons.mustache"],
+      "matchFileNames": [
+        "**/eks/addons.mustache"
+      ],
       "matchStrings": [
         "name: vpc-cni\\s+version: (?<currentValue>v[0-9]+\\.[0-9]+\\.[0-9]+-eksbuild\\.[0-9]+)"
       ],
@@ -39,7 +45,9 @@
     },
     {
       "description": "CoreDNS specific configuration",
-      "matchFileNames": ["**/eks/addons.mustache"],
+      "matchFileNames": [
+        "**/eks/addons.mustache"
+      ],
       "matchStrings": [
         "name: coredns\\s+version: (?<currentValue>v[0-9]+\\.[0-9]+\\.[0-9]+-eksbuild\\.[0-9]+)"
       ],
@@ -50,7 +58,9 @@
     },
     {
       "description": "Pod Identity Agent specific configuration",
-      "matchFileNames": ["**/eks/addons.mustache"],
+      "matchFileNames": [
+        "**/eks/addons.mustache"
+      ],
       "matchStrings": [
         "name: eks-pod-identity-agent\\s+version: (?<currentValue>v[0-9]+\\.[0-9]+\\.[0-9]+-eksbuild\\.[0-9]+)"
       ],
@@ -61,7 +71,9 @@
     },
     {
       "description": "Storage & Security Layer - Requires foundation components",
-      "matchFileNames": ["**/eks/addons.mustache"],
+      "matchFileNames": [
+        "**/eks/addons.mustache"
+      ],
       "matchStrings": [
         "name: aws-ebs-csi-driver\\s+version: (?<currentValue>v[0-9]+\\.[0-9]+\\.[0-9]+-eksbuild\\.[0-9]+)",
         "name: cert-manager\\s+repository: https://charts\\.jetstack\\.io\\s+release: cert-manager\\s+version: (?<currentValue>v[0-9]+\\.[0-9]+\\.[0-9]+)",
@@ -69,11 +81,15 @@
       ],
       "groupName": "storage-security",
       "prPriority": 8,
-      "schedule": ["after 6am on monday"]
+      "schedule": [
+        "after 6am on monday"
+      ]
     },
     {
       "description": "EBS CSI Driver specific configuration",
-      "matchFileNames": ["**/eks/addons.mustache"],
+      "matchFileNames": [
+        "**/eks/addons.mustache"
+      ],
       "matchStrings": [
         "name: aws-ebs-csi-driver\\s+version: (?<currentValue>v[0-9]+\\.[0-9]+\\.[0-9]+-eksbuild\\.[0-9]+)"
       ],
@@ -84,7 +100,9 @@
     },
     {
       "description": "Cert-manager Helm chart",
-      "matchFileNames": ["**/eks/addons.mustache"],
+      "matchFileNames": [
+        "**/eks/addons.mustache"
+      ],
       "matchStrings": [
         "name: cert-manager\\s+repository: https://charts\\.jetstack\\.io\\s+release: cert-manager\\s+version: (?<currentValue>v[0-9]+\\.[0-9]+\\.[0-9]+)"
       ],
@@ -95,7 +113,9 @@
     },
     {
       "description": "AWS Secrets Store Provider",
-      "matchFileNames": ["**/eks/addons.mustache"],
+      "matchFileNames": [
+        "**/eks/addons.mustache"
+      ],
       "matchStrings": [
         "name: secrets-store-csi-driver-provider-aws\\s+repository: https://aws\\.github\\.io/secrets-store-csi-driver-provider-aws\\s+release: aws-secrets\\s+version: (?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)"
       ],
@@ -106,18 +126,24 @@
     },
     {
       "description": "Workload Management Layer - Requires storage and security",
-      "matchFileNames": ["**/eks/addons.mustache"],
+      "matchFileNames": [
+        "**/eks/addons.mustache"
+      ],
       "matchStrings": [
         "name: karpenter\\s+repository: oci://public\\.ecr\\.aws/karpenter/karpenter\\s+release: karpenter\\s+version: (?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)",
         "name: aws-load-balancer-controller\\s+repository: https://aws\\.github\\.io/eks-charts\\s+release: aws-load-balancer-controller\\s+version: (?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)"
       ],
       "groupName": "workload-management",
       "prPriority": 6,
-      "schedule": ["before 6am on tuesday"]
+      "schedule": [
+        "before 6am on tuesday"
+      ]
     },
     {
       "description": "Karpenter specific configuration",
-      "matchFileNames": ["**/eks/addons.mustache"],
+      "matchFileNames": [
+        "**/eks/addons.mustache"
+      ],
       "matchStrings": [
         "name: karpenter\\s+repository: oci://public\\.ecr\\.aws/karpenter/karpenter\\s+release: karpenter\\s+version: (?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)"
       ],
@@ -128,7 +154,9 @@
     },
     {
       "description": "AWS Load Balancer Controller",
-      "matchFileNames": ["**/eks/addons.mustache"],
+      "matchFileNames": [
+        "**/eks/addons.mustache"
+      ],
       "matchStrings": [
         "name: aws-load-balancer-controller\\s+repository: https://aws\\.github\\.io/eks-charts\\s+release: aws-load-balancer-controller\\s+version: (?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)"
       ],
@@ -139,7 +167,9 @@
     },
     {
       "description": "Observability Layer - Update last, alloy-operator → k8s-monitoring dependency order",
-      "matchFileNames": ["**/eks/addons.mustache"],
+      "matchFileNames": [
+        "**/eks/addons.mustache"
+      ],
       "matchStrings": [
         "name: alloy-operator\\s+repository: https://grafana\\.github\\.io/helm-charts\\s+release: alloy-operator\\s+version: (?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)",
         "name: k8s-monitoring\\s+repository: https://grafana\\.github\\.io/helm-charts\\s+release: k8s-monitoring\\s+version: (?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)",
@@ -147,11 +177,15 @@
       ],
       "groupName": "observability",
       "prPriority": 4,
-      "schedule": ["before 6am on wednesday"]
+      "schedule": [
+        "before 6am on wednesday"
+      ]
     },
     {
       "description": "Alloy Operator Helm chart",
-      "matchFileNames": ["**/eks/addons.mustache"],
+      "matchFileNames": [
+        "**/eks/addons.mustache"
+      ],
       "matchStrings": [
         "name: alloy-operator\\s+repository: https://grafana\\.github\\.io/helm-charts\\s+release: alloy-operator\\s+version: (?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)"
       ],
@@ -162,7 +196,9 @@
     },
     {
       "description": "Grafana k8s-monitoring Helm chart",
-      "matchFileNames": ["**/eks/addons.mustache"],
+      "matchFileNames": [
+        "**/eks/addons.mustache"
+      ],
       "matchStrings": [
         "name: k8s-monitoring\\s+repository: https://grafana\\.github\\.io/helm-charts\\s+release: k8s-monitoring\\s+version: (?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)"
       ],
@@ -173,7 +209,9 @@
     },
     {
       "description": "CloudWatch Observability specific configuration",
-      "matchFileNames": ["**/eks/addons.mustache"],
+      "matchFileNames": [
+        "**/eks/addons.mustache"
+      ],
       "matchStrings": [
         "name: amazon-cloudwatch-observability\\s+version: (?<currentValue>v[0-9]+\\.[0-9]+\\.[0-9]+-eksbuild\\.[0-9]+)"
       ],
