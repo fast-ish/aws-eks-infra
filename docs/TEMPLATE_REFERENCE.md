@@ -12,17 +12,17 @@ The main configuration template that defines the entire infrastructure stack.
 
 #### Host Configuration
 ```yaml
-host:
+platform:
   common:
-    id: {{host:id}}                    # Infrastructure identifier
-    organization: {{host:organization}} # Organization name
-    account: {{host:account}}          # AWS account ID
-    region: {{host:region}}            # AWS region
-    name: {{host:name}}                # Service name
-    alias: {{host:alias}}              # Environment alias
-    environment: {{host:environment}}   # Environment type
-    version: {{host:version}}          # Version identifier
-    domain: {{host:domain}}            # Domain name for tagging
+    id: {{platform:id}}                    # Infrastructure identifier
+    organization: {{platform:organization}} # Organization name
+    account: {{platform:account}}          # AWS account ID
+    region: {{platform:region}}            # AWS region
+    name: {{platform:name}}                # Service name
+    alias: {{platform:alias}}              # Environment alias
+    environment: {{platform:environment}}   # Environment type
+    version: {{platform:version}}          # Version identifier
+    domain: {{platform:domain}}            # Domain name for tagging
 ```
 
 #### Hosted Configuration
@@ -181,20 +181,20 @@ userClusterRoleBinding:
   apiVersion: rbac.authorization.k8s.io/v1
   kind: ClusterRoleBinding
   metadata:
-    name: {{hosted:id}}-eks-read-only-binding
+    name: {{deployment:id}}-eks-read-only-binding
   subjects:
     - kind: Group
       name: eks:read-only
       apiGroup: rbac.authorization.k8s.io
   roleRef:
     kind: ClusterRole
-    name: {{hosted:id}}-eks-read-only-role
+    name: {{deployment:id}}-eks-read-only-role
 
 userClusterRole:
   apiVersion: rbac.authorization.k8s.io/v1
   kind: ClusterRole
   metadata:
-    name: {{hosted:id}}-eks-read-only-role
+    name: {{deployment:id}}-eks-read-only-role
   rules:
     - apiGroups: [""]
       resources: ["pods", "services", "deployments"]
@@ -217,7 +217,7 @@ userClusterRole:
 Defines managed node group configuration for the EKS cluster.
 
 ```yaml
-- name: {{hosted:id}}-core-node
+- name: {{deployment:id}}-core-node
   amiType: bottlerocket_x86_64
   forceUpdate: true
   instanceClass: m5a
@@ -227,7 +227,7 @@ Defines managed node group configuration for the EKS cluster.
   minSize: 2
   maxSize: 6
   role:
-    name: {{hosted:id}}-core-node
+    name: {{deployment:id}}-core-node
     managedPolicyNames:
       - AmazonEKSWorkerNodePolicy
       - AmazonEC2ContainerRegistryReadOnly
@@ -304,22 +304,22 @@ Comprehensive monitoring, alerting, and dashboard configuration.
 SQS queue configuration for Karpenter interruption handling.
 
 ```yaml
-name: {{hosted:id}}-karpenter
+name: {{deployment:id}}-karpenter
 retention: 300
 rules:
-  - name: {{hosted:id}}-eks-health
+  - name: {{deployment:id}}-eks-health
     eventPattern:
       source: ["aws.health"]
       detailType: ["AWS Health Event"]
-  - name: {{hosted:id}}-eks-spot
+  - name: {{deployment:id}}-eks-spot
     eventPattern:
       source: ["aws.ec2"] 
       detailType: ["EC2 Spot Instance Interruption Warning"]
-  - name: {{hosted:id}}-eks-rebalance
+  - name: {{deployment:id}}-eks-rebalance
     eventPattern:
       source: ["aws.ec2"]
       detailType: ["EC2 Instance Rebalance Recommendation"]
-  - name: {{hosted:id}}-eks-state
+  - name: {{deployment:id}}-eks-state
     eventPattern:
       source: ["aws.ec2"]
       detailType: ["EC2 Instance State-change Notification"]
@@ -338,13 +338,13 @@ rules:
 
 ```yaml
 nodeSelector:
-  "eks.amazonaws.com/nodegroup": {{hosted:id}}-core-node
+  "eks.amazonaws.com/nodegroup": {{deployment:id}}-core-node
 settings:
-  clusterName: {{hosted:id}}-eks
-  interruptionQueue: {{hosted:id}}-karpenter
+  clusterName: {{deployment:id}}-eks
+  interruptionQueue: {{deployment:id}}-karpenter
 serviceAccount:
   create: false
-  name: {{hosted:id}}-karpenter-sa
+  name: {{deployment:id}}-karpenter-sa
 serviceMonitor:
   enabled: false
 logLevel: debug
@@ -435,11 +435,11 @@ Templates use Mustache syntax with the following parameter sources:
 
 ### Common Parameters
 
-- `{{hosted:id}}`: Infrastructure identifier
-- `{{hosted:account}}`: AWS account ID
-- `{{hosted:region}}`: AWS region
-- `{{hosted:domain}}`: Domain for resource tagging
-- `{{hosted:organization}}`: Organization name
+- `{{deployment:id}}`: Infrastructure identifier
+- `{{deployment:account}}`: AWS account ID
+- `{{deployment:region}}`: AWS region
+- `{{deployment:domain}}`: Domain for resource tagging
+- `{{deployment:organization}}`: Organization name
 
 ### Adding New Templates
 

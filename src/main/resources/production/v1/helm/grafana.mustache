@@ -1,29 +1,29 @@
 cluster:
-  name: "{{hosted:id}}-eks"
+  name: "{{deployment:id}}-eks"
 
 destinations:
   - name: grafana-cloud-metrics
     type: prometheus
-    url: {{hosted:eks:grafana:prometheusHost}}/api/prom/push
+    url: {{deployment:eks:grafana:prometheusHost}}/api/prom/push
     auth:
       type: basic
-      username: "{{hosted:eks:grafana:prometheusUsername}}"
-      password: {{hosted:eks:grafana:key}}
+      username: "{{deployment:eks:grafana:prometheusUsername}}"
+      password: {{deployment:eks:grafana:key}}
   - name: grafana-cloud-logs
     type: loki
-    url: {{hosted:eks:grafana:lokiHost}}/loki/api/v1/push
+    url: {{deployment:eks:grafana:lokiHost}}/loki/api/v1/push
     auth:
       type: basic
-      username: "{{hosted:eks:grafana:lokiUsername}}"
-      password: {{hosted:eks:grafana:key}}
+      username: "{{deployment:eks:grafana:lokiUsername}}"
+      password: {{deployment:eks:grafana:key}}
   - name: grafana-cloud-traces
     type: otlp
-    url: {{hosted:eks:grafana:tempoHost}}
+    url: {{deployment:eks:grafana:tempoHost}}
     protocol: grpc
     auth:
       type: basic
-      username: "{{hosted:eks:grafana:tempoUsername}}"
-      password: {{hosted:eks:grafana:key}}
+      username: "{{deployment:eks:grafana:tempoUsername}}"
+      password: {{deployment:eks:grafana:key}}
     metrics:
       enabled: false
     logs:
@@ -32,11 +32,11 @@ destinations:
       enabled: true
   - name: grafana-cloud-profiles
     type: pyroscope
-    url: {{hosted:eks:grafana:pyroscopeHost}}
+    url: {{deployment:eks:grafana:pyroscopeHost}}
     auth:
       type: basic
-      username: "{{hosted:eks:grafana:instanceId}}"
-      password: {{hosted:eks:grafana:key}}
+      username: "{{deployment:eks:grafana:instanceId}}"
+      password: {{deployment:eks:grafana:key}}
 
 clusterMetrics:
   enabled: true
@@ -45,11 +45,11 @@ clusterMetrics:
     metricsSource: grafana-cloud-metrics
     opencost:
       exporter:
-        defaultClusterId: "{{hosted:id}}-eks"
+        defaultClusterId: "{{deployment:id}}-eks"
       prometheus:
         existingSecretName: grafana-cloud-metrics-k8s-monitoring
         external:
-          url: {{hosted:eks:grafana:prometheusHost}}/api/prom
+          url: {{deployment:eks:grafana:prometheusHost}}/api/prom
   kepler:
     enabled: true
 
@@ -96,9 +96,9 @@ alloy-metrics:
   alloy:
     extraEnv:
       - name: GCLOUD_RW_API_KEY
-        value: {{hosted:eks:grafana:key}}
+        value: {{deployment:eks:grafana:key}}
       - name: CLUSTER_NAME
-        value: "{{hosted:id}}-eks"
+        value: "{{deployment:id}}-eks"
       - name: NAMESPACE
         valueFrom:
           fieldRef:
@@ -115,9 +115,9 @@ alloy-singleton:
   alloy:
     extraEnv:
       - name: GCLOUD_RW_API_KEY
-        value: {{hosted:eks:grafana:key}}
+        value: {{deployment:eks:grafana:key}}
       - name: CLUSTER_NAME
-        value: "{{hosted:id}}-eks"
+        value: "{{deployment:id}}-eks"
       - name: NAMESPACE
         valueFrom:
           fieldRef:
@@ -134,9 +134,9 @@ alloy-logs:
   alloy:
     extraEnv:
       - name: GCLOUD_RW_API_KEY
-        value: {{hosted:eks:grafana:key}}
+        value: {{deployment:eks:grafana:key}}
       - name: CLUSTER_NAME
-        value: "{{hosted:id}}-eks"
+        value: "{{deployment:id}}-eks"
       - name: NAMESPACE
         valueFrom:
           fieldRef:
@@ -170,9 +170,9 @@ alloy-receiver:
         protocol: TCP
     extraEnv:
       - name: GCLOUD_RW_API_KEY
-        value: {{hosted:eks:grafana:key}}
+        value: {{deployment:eks:grafana:key}}
       - name: CLUSTER_NAME
-        value: "{{hosted:id}}-eks"
+        value: "{{deployment:id}}-eks"
       - name: NAMESPACE
         valueFrom:
           fieldRef:
@@ -193,9 +193,9 @@ alloy-profiles:
   alloy:
     extraEnv:
       - name: GCLOUD_RW_API_KEY
-        value: {{hosted:eks:grafana:key}}
+        value: {{deployment:eks:grafana:key}}
       - name: CLUSTER_NAME
-        value: "{{hosted:id}}-eks"
+        value: "{{deployment:id}}-eks"
       - name: NAMESPACE
         valueFrom:
           fieldRef:

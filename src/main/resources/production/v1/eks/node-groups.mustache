@@ -1,4 +1,4 @@
-- name: {{hosted:id}}-core-node
+- name: {{deployment:id}}-core-node
   amiType: bottlerocket_x86_64
   forceUpdate: true
   instanceClass: m5a
@@ -8,7 +8,7 @@
   minSize: 2
   maxSize: 6
   role:
-    name: {{hosted:id}}-core-node
+    name: {{deployment:id}}-core-node
     principal:
       type: service
       value: ec2.amazonaws.com
@@ -18,23 +18,23 @@
       - AmazonSSMManagedInstanceCore
     customPolicies: [ ]
     tags:
-      "{{hosted:domain}}:resource-type": role
-      "{{hosted:domain}}:category": compute
-      "{{hosted:domain}}:type": core-node
-      "{{hosted:domain}}:component": {{hosted:id}}-eks
-      "{{hosted:domain}}:part-of": "{{hosted:organization}}.{{hosted:name}}.{{hosted:alias}}"
+      "{{deployment:domain}}:resource-type": role
+      "{{deployment:domain}}:category": compute
+      "{{deployment:domain}}:type": core-node
+      "{{deployment:domain}}:component": {{deployment:id}}-eks
+      "{{deployment:domain}}:part-of": "{{deployment:organization}}.{{deployment:name}}.{{deployment:alias}}"
   labels:
-    "{{hosted:domain}}/resource-type": node
-    "{{hosted:domain}}/category": compute
-    "{{hosted:domain}}/type": core-node
-    "{{hosted:domain}}/component": eks
-    "{{hosted:domain}}/part-of": "{{hosted:organization}}.{{hosted:name}}.{{hosted:alias}}"
-    "karpenter.sh/discovery": {{hosted:id}}-vpc
+    "{{deployment:domain}}/resource-type": node
+    "{{deployment:domain}}/category": compute
+    "{{deployment:domain}}/type": core-node
+    "{{deployment:domain}}/component": eks
+    "{{deployment:domain}}/part-of": "{{deployment:organization}}.{{deployment:name}}.{{deployment:alias}}"
+    "karpenter.sh/discovery": {{deployment:id}}-vpc
   tags:
-    "{{hosted:domain}}:resource-type": node
-    "{{hosted:domain}}:category": compute
-    "{{hosted:domain}}:type": core-node
-    "{{hosted:domain}}:component": {{hosted:id}}-eks
-    "{{hosted:domain}}:part-of": "{{hosted:organization}}.{{hosted:name}}.{{hosted:alias}}"
-    "eks.amazonaws.com/nodegroup": {{hosted:id}}-core-node
-    "karpenter.sh/discovery": {{hosted:id}}-vpc
+    "{{deployment:domain}}:resource-type": node
+    "{{deployment:domain}}:category": compute
+    "{{deployment:domain}}:type": core-node
+    "{{deployment:domain}}:component": {{deployment:id}}-eks
+    "{{deployment:domain}}:part-of": "{{deployment:organization}}.{{deployment:name}}.{{deployment:alias}}"
+    "eks.amazonaws.com/nodegroup": {{deployment:id}}-core-node
+    "karpenter.sh/discovery": {{deployment:id}}-vpc

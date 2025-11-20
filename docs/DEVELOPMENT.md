@@ -228,9 +228,9 @@ managed:
         namespace: kube-system
 
 # Use meaningful parameter names
-{{hosted:id}}-eks
-{{hosted:account}}
-{{hosted:region}}
+{{deployment:id}}-eks
+{{deployment:account}}
+{{deployment:region}}
 
 # Include comments for complex configurations
 # This configuration enables pod identity for service accounts
@@ -297,7 +297,7 @@ cdk synth > /dev/null
 echo "Synthesis test: $?"
 
 # Test with different configurations
-CDK_CONTEXT='{"hosted:environment":"test"}' cdk synth
+CDK_CONTEXT='{"deployment:environment":"test"}' cdk synth
 ```
 
 #### Deployment Testing
@@ -399,7 +399,7 @@ newAddon:
       name: new-addon-sa
       namespace: kube-system
     role:
-      name: {{hosted:id}}-new-addon-sa
+      name: {{deployment:id}}-new-addon-sa
       managedPolicyNames:
         - NewAddonPolicy
       customPolicies: []
@@ -447,12 +447,12 @@ newHelmChart:
 ```yaml
 # src/main/resources/prototype/v1/helm/new-chart.mustache
 global:
-  clusterName: {{hosted:id}}-eks
-  region: {{hosted:region}}
+  clusterName: {{deployment:id}}-eks
+  region: {{deployment:region}}
 
 serviceAccount:
   create: false
-  name: {{hosted:id}}-new-chart-sa
+  name: {{deployment:id}}-new-chart-sa
 
 resources:
   limits:
@@ -469,12 +469,12 @@ resources:
 newHelmChart:
   serviceAccount:
     metadata:
-      name: {{hosted:id}}-new-chart-sa
+      name: {{deployment:id}}-new-chart-sa
       namespace: new-chart-namespace
     role:
-      name: {{hosted:id}}-new-chart-sa
+      name: {{deployment:id}}-new-chart-sa
       customPolicies:
-        - name: {{hosted:id}}-new-chart
+        - name: {{deployment:id}}-new-chart
           policy: policy/new-chart.mustache
 ```
 
@@ -504,7 +504,7 @@ public class NewFeatureConf {
 #### 2. Update Configuration Template
 ```yaml
 # src/main/resources/prototype/v1/conf.mustache
-hosted:
+deployment:
   newFeature:
     enabled: true
     version: "1.0.0"
@@ -560,7 +560,7 @@ customPolicies:
 ```yaml
 # Encrypt sensitive data
 kms:
-  alias: {{hosted:id}}-encryption-key
+  alias: {{deployment:id}}-encryption-key
   enabled: true
   enableKeyRotation: true
 
@@ -706,11 +706,11 @@ aws cloudformation describe-stack-resources --stack-name eks-platform
 #### 2. EKS Issues
 ```bash
 # Check cluster status (replace with your actual cluster name)
-aws eks describe-cluster --name {{hosted:id}}-eks
+aws eks describe-cluster --name {{deployment:id}}-eks
 
 # Check addon status
-aws eks list-addons --cluster-name {{hosted:id}}-eks
-aws eks describe-addon --cluster-name {{hosted:id}}-eks --addon-name vpc-cni
+aws eks list-addons --cluster-name {{deployment:id}}-eks
+aws eks describe-addon --cluster-name {{deployment:id}}-eks --addon-name vpc-cni
 ```
 
 ## Contribution Guidelines

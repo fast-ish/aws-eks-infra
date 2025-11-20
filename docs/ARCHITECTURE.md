@@ -78,7 +78,7 @@ This AWS EKS infrastructure project implements a production-ready Kubernetes clu
 #### Karpenter Auto-scaling
 - **Dynamic Provisioning**: Just-in-time node provisioning using Pod Identity
 - **Cost Optimization**: Right-sized instances based on pod requirements
-- **Interruption Handling**: SQS integration (`{{hosted:id}}-karpenter` queue) for spot instance interruptions
+- **Interruption Handling**: SQS integration (`{{deployment:id}}-karpenter` queue) for spot instance interruptions
 - **Multi-AZ**: Distributes workloads across availability zones
 - **Node Selection**: Targets core nodes for Karpenter pod placement
 

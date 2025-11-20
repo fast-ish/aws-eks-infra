@@ -34,7 +34,7 @@ cdk synth
 cdk deploy
 
 # 5. Configure kubectl
-aws eks update-kubeconfig --name {{hosted:id}}-eks --region <region>
+aws eks update-kubeconfig --name {{deployment:id}}-eks --region <region>
 kubectl get nodes
 ```
 
@@ -62,7 +62,7 @@ kubectl run test-pod --image=nginx --rm -it -- /bin/bash
 #### EKS Version Upgrade
 ```bash
 # 1. Check current version
-aws eks describe-cluster --name {{hosted:id}}-eks --query cluster.version
+aws eks describe-cluster --name {{deployment:id}}-eks --query cluster.version
 
 # 2. Update configuration
 # Edit conf.mustache to update EKS version
@@ -79,7 +79,7 @@ cdk deploy
 #### Addon Updates
 ```bash
 # 1. Check current addon versions
-aws eks describe-addon --cluster-name {{hosted:id}}-eks --addon-name vpc-cni
+aws eks describe-addon --cluster-name {{deployment:id}}-eks --addon-name vpc-cni
 
 # 2. Update addon configuration
 # Edit addons.mustache with new versions
@@ -196,7 +196,7 @@ kubectl logs -l app=<app-label> -n <namespace>
 aws logs describe-log-groups --log-group-name-prefix "/aws/eks"
 
 # Stream logs (replace with your cluster name)
-aws logs tail /aws/eks/{{hosted:id}}-eks/cluster --follow
+aws logs tail /aws/eks/{{deployment:id}}-eks/cluster --follow
 ```
 
 ### Alerting Configuration
@@ -373,7 +373,7 @@ kubectl get events --field-selector reason=VolumeMount
 aws ec2 create-snapshot --volume-id <volume-id> --description "Manual backup"
 
 # List snapshots
-aws ec2 describe-snapshots --owner-ids self --filters "Name=tag:cluster,Values={{hosted:id}}-eks"
+aws ec2 describe-snapshots --owner-ids self --filters "Name=tag:cluster,Values={{deployment:id}}-eks"
 
 # Automated snapshots via DLM (Data Lifecycle Manager)
 aws dlm create-lifecycle-policy --execution-role-arn <role-arn> --description "EKS backup policy"
@@ -466,7 +466,7 @@ kubectl run performance-test --image=<perf-image> --rm -it
 #### Node Group Scaling
 ```bash
 # Scale managed node group
-aws eks update-nodegroup-config --cluster-name {{hosted:id}}-eks --nodegroup-name <nodegroup-name> --scaling-config minSize=1,maxSize=10,desiredSize=5
+aws eks update-nodegroup-config --cluster-name {{deployment:id}}-eks --nodegroup-name <nodegroup-name> --scaling-config minSize=1,maxSize=10,desiredSize=5
 
 # Verify scaling
 kubectl get nodes
