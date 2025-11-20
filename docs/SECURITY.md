@@ -320,7 +320,7 @@ This infrastructure provides security foundations that support various complianc
 This infrastructure implements the following security controls that support compliance frameworks:
 
 #### Encryption Controls
-- **EBS Volume Encryption**: All persistent volumes encrypted using dedicated KMS keys (`alias/{{hosted:id}}-eks-ebs-encryption`)
+- **EBS Volume Encryption**: All persistent volumes encrypted using dedicated KMS keys (`alias/{{deployment:id}}-eks-ebs-encryption`)
 - **Transit Encryption**: All API communications encrypted via TLS
 - **Key Management**: AWS KMS integration with configurable key rotation policies
 

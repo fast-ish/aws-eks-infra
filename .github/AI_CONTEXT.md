@@ -89,7 +89,7 @@ All infrastructure is defined through YAML configuration files processed by Must
 
 ```yaml
 # resources/prototype/v1/eks/cluster.yaml
-name: "{{hosted:name}}-eks"
+name: "{{deployment:name}}-eks"
 version: "1.33"
 logging:
   api: true
@@ -100,8 +100,8 @@ logging:
 ```
 
 **Template Variables**:
-- `{{host:*}}` - AWS account/region context (e.g., `host:account`, `host:region`)
-- `{{hosted:*}}` - Application context (e.g., `hosted:name`, `hosted:environment`)
+- `{{platform:*}}` - AWS account/region context (e.g., `host:account`, `host:region`)
+- `{{deployment:*}}` - Application context (e.g., `hosted:name`, `hosted:environment`)
 - Service-specific: `{{eks:*}}`, `{{vpc:*}}`, etc.
 
 ### 2. cdk-common Dependency
@@ -221,7 +221,7 @@ Installed via CDK Helm chart construct:
 - Node consolidation and deprovisioning
 
 **Configuration**:
-- SQS Queue: `{{hosted:id}}-karpenter`
+- SQS Queue: `{{deployment:id}}-karpenter`
 - Service Account: Linked to IAM role with EC2 permissions
 - EC2NodeClass: Defines AMI, security groups, subnets
 - NodePool: Defines instance requirements and limits
@@ -356,7 +356,7 @@ var clusterConf = Template.load(ClusterConf.class,
 1. Update `cdk.context.json` with new IAM role ARN:
 ```json
 {
-  "hosted:eks:administrators": [
+  "deployment:eks:administrators": [
     {
       "username": "new-admin",
       "role": "arn:aws:iam::ACCOUNT:role/ROLE-NAME",

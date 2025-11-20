@@ -70,14 +70,14 @@ service) cluster with managed addons, custom helm charts, observability integrat
     + cluster access configuration
         ```json
         {
-          "hosted:eks:administrators": [
+          "deployment:eks:administrators": [
             {
               "username": "administrator",
               "role": "arn:aws:iam::000000000000:role/AWSReservedSSO_AdministratorAccess_abc",
               "email": "admin@aol.com"
             }
           ],
-          "hosted:eks:users": [
+          "deployment:eks:users": [
             {
               "username": "user",
               "role": "arn:aws:iam::000000000000:role/AWSReservedSSO_DeveloperAccess_abc",

@@ -2,21 +2,21 @@ userClusterRoleBinding:
   apiVersion: rbac.authorization.k8s.io/v1
   kind: ClusterRoleBinding
   metadata:
-    name: {{hosted:id}}-eks-read-only-binding
+    name: {{deployment:id}}-eks-read-only-binding
   subjects:
     - kind: Group
       name: eks:read-only
       apiGroup: rbac.authorization.k8s.io
   roleRef:
     kind: ClusterRole
-    name: {{hosted:id}}-eks-read-only-role
+    name: {{deployment:id}}-eks-read-only-role
     apiGroup: rbac.authorization.k8s.io
 
 userClusterRole:
   apiVersion: rbac.authorization.k8s.io/v1
   kind: ClusterRole
   metadata:
-    name: {{hosted:id}}-eks-read-only-role
+    name: {{deployment:id}}-eks-read-only-role
   rules:
     - apiGroups: [ "" ]
       resources: [ "pods", "services", "deployments" ]
