@@ -12,11 +12,11 @@ import static fasti.sh.execute.serialization.Format.describe;
 import static fasti.sh.execute.serialization.Format.id;
 
 @Getter
-public class DeploymentStack extends Stack {
+public class EksStack extends Stack {
   private final NetworkNestedStack network;
   private final EksNestedStack eks;
 
-  public DeploymentStack(Construct scope, DeploymentConf conf, StackProps props) {
+  public EksStack(Construct scope, EksReleaseConf conf, StackProps props) {
     super(scope, id("eks", conf.common().version()), props);
 
     this.network = new NetworkNestedStack(this, conf.common(), conf.vpc(),

@@ -27,7 +27,7 @@ awsVpcCni:
       name: aws-node
       namespace: kube-system
     role:
-      name: {{hosted:id}}-vpc-cni
+      name: {{deployment:id}}-vpc-cni
       managedPolicyNames:
         - AmazonEKS_CNI_Policy
 ```
@@ -98,11 +98,11 @@ awsEbsCsi:
       managedPolicyNames:
         - service-role/AmazonEBSCSIDriverPolicy
       customPolicies:
-        - name: {{hosted:id}}-eks-ebs-encryption
+        - name: {{deployment:id}}-eks-ebs-encryption
           policy: policy/kms-eks-ebs-encryption.mustache
   defaultStorageClass: eks/storage-class.yaml
   kms:
-    alias: {{hosted:id}}-eks-ebs-encryption
+    alias: {{deployment:id}}-eks-ebs-encryption
     enabled: true
 ```
 
@@ -119,7 +119,7 @@ provisioner: ebs.csi.aws.com
 parameters:
   type: gp3
   encrypted: "true"
-  kmsKeyId: alias/{{hosted:id}}-eks-ebs-encryption
+  kmsKeyId: alias/{{deployment:id}}-eks-ebs-encryption
   iops: "3000"
   throughput: "125"
 volumeBindingMode: WaitForFirstConsumer
@@ -615,14 +615,14 @@ spec:
   amiFamily: AL2
   subnetSelectorTerms:
   - tags:
-      karpenter.sh/discovery: "{{hosted:id}}-vpc"
+      karpenter.sh/discovery: "{{deployment:id}}-vpc"
   securityGroupSelectorTerms:
   - tags:
-      karpenter.sh/discovery: "{{hosted:id}}-vpc"
+      karpenter.sh/discovery: "{{deployment:id}}-vpc"
   instanceStorePolicy: RAID0
   userData: |
     #!/bin/bash
-    /etc/eks/bootstrap.sh {{hosted:id}}-eks
+    /etc/eks/bootstrap.sh {{deployment:id}}-eks
 ```
 
 #### Troubleshooting Karpenter Issues
