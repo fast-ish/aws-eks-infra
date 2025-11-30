@@ -14,7 +14,7 @@ version: v1.20.5-eksbuild.1
           "{{deployment:domain}}/category": network
           "{{deployment:domain}}/type": operations
           "{{deployment:domain}}/component": aws-vpc-cni.aws-node
-          "{{deployment:domain}}/part-of": "{{deployment:organization}}.{{deployment:name}}.{{deployment:alias}}"
+          "{{deployment:domain}}/part-of": "{{deployment:organization}}.{{deployment:team:name}}.{{deployment:team:alias}}"
         annotations: { }
       role:
         name: {{deployment:id}}-vpc-cni
@@ -26,7 +26,7 @@ version: v1.20.5-eksbuild.1
           "{{deployment:domain}}:category": network
           "{{deployment:domain}}:type": operations
           "{{deployment:domain}}:component": {{deployment:id}}-aws-vpc-cni.aws-node
-          "{{deployment:domain}}:part-of": "{{deployment:organization}}.{{deployment:name}}.{{deployment:alias}}"
+          "{{deployment:domain}}:part-of": "{{deployment:organization}}.{{deployment:team:name}}.{{deployment:team:alias}}"
   awsEbsCsi:
     name: aws-ebs-csi-driver
 version: v1.53.0-eksbuild.1
@@ -41,7 +41,7 @@ version: v1.53.0-eksbuild.1
           "{{deployment:domain}}/category": storage
           "{{deployment:domain}}/type": operations
           "{{deployment:domain}}/component": aws-ebs-cni
-          "{{deployment:domain}}/part-of": "{{deployment:organization}}.{{deployment:name}}.{{deployment:alias}}"
+          "{{deployment:domain}}/part-of": "{{deployment:organization}}.{{deployment:team:name}}.{{deployment:team:alias}}"
         annotations: { }
       role:
         name: {{deployment:id}}-aws-ebs-csi-sa
@@ -58,7 +58,7 @@ version: v1.53.0-eksbuild.1
           "{{deployment:domain}}:category": storage
           "{{deployment:domain}}:type": operations
           "{{deployment:domain}}:component": {{deployment:id}}-aws-ebs-cni
-          "{{deployment:domain}}:part-of": "{{deployment:organization}}.{{deployment:name}}.{{deployment:alias}}"
+          "{{deployment:domain}}:part-of": "{{deployment:organization}}.{{deployment:team:name}}.{{deployment:team:alias}}"
     defaultStorageClass: eks/storage-class.yaml
     kms:
       alias: {{deployment:id}}-eks-ebs-encryption
@@ -97,7 +97,7 @@ version: v5.0.0-eksbuild.1
           "{{deployment:domain}}/category": monitoring
           "{{deployment:domain}}/type": operations
           "{{deployment:domain}}/component": amazon-cloudwatch-observability
-          "{{deployment:domain}}/part-of": "{{deployment:organization}}.{{deployment:name}}.{{deployment:alias}}"
+          "{{deployment:domain}}/part-of": "{{deployment:organization}}.{{deployment:team:name}}.{{deployment:team:alias}}"
         annotations: { }
       role:
         name: {{deployment:id}}-cloudwatch-agent-sa
@@ -110,7 +110,7 @@ version: v5.0.0-eksbuild.1
           "{{deployment:domain}}:category": monitoring
           "{{deployment:domain}}:type": operations
           "{{deployment:domain}}:component": {{deployment:id}}-cloudwatch-agent
-          "{{deployment:domain}}:part-of": "{{deployment:organization}}.{{deployment:name}}.{{deployment:alias}}"
+          "{{deployment:domain}}:part-of": "{{deployment:organization}}.{{deployment:team:name}}.{{deployment:team:alias}}"
 certManager:
   chart:
     name: cert-manager
@@ -144,7 +144,7 @@ karpenter:
         "{{deployment:domain}}/category": operations
         "{{deployment:domain}}/type": autoscale
         "{{deployment:domain}}/component": karpenter
-        "{{deployment:domain}}/part-of": "{{deployment:organization}}.{{deployment:name}}.{{deployment:alias}}"
+        "{{deployment:domain}}/part-of": "{{deployment:organization}}.{{deployment:team:name}}.{{deployment:team:alias}}"
       annotations: { }
     role:
       name: {{deployment:id}}-karpenter-sa
@@ -169,7 +169,7 @@ karpenter:
         "{{deployment:domain}}:category": karpenter
         "{{deployment:domain}}:type": operations
         "{{deployment:domain}}:component": {{deployment:id}}-eks
-        "{{deployment:domain}}:part-of": "{{deployment:organization}}.{{deployment:name}}.{{deployment:alias}}"
+        "{{deployment:domain}}:part-of": "{{deployment:organization}}.{{deployment:team:name}}.{{deployment:team:alias}}"
 awsLoadBalancer:
   chart:
     name: aws-load-balancer-controller
@@ -187,7 +187,7 @@ awsLoadBalancer:
         "{{deployment:domain}}/category": ingress
         "{{deployment:domain}}/type": operations
         "{{deployment:domain}}/component": aws-load-balancer
-        "{{deployment:domain}}/part-of": "{{deployment:organization}}.{{deployment:name}}.{{deployment:alias}}"
+        "{{deployment:domain}}/part-of": "{{deployment:organization}}.{{deployment:team:name}}.{{deployment:team:alias}}"
       annotations: { }
     role:
       name: {{deployment:id}}-aws-load-balancer-sa
@@ -201,7 +201,7 @@ awsLoadBalancer:
         "{{deployment:domain}}:category": ingress
         "{{deployment:domain}}:type": operations
         "{{deployment:domain}}:component": {{deployment:id}}-aws-load-balancer
-        "{{deployment:domain}}:part-of": "{{deployment:organization}}.{{deployment:name}}.{{deployment:alias}}"
+        "{{deployment:domain}}:part-of": "{{deployment:organization}}.{{deployment:team:name}}.{{deployment:team:alias}}"
 alloyOperator:
   chart:
     name: alloy-operator
