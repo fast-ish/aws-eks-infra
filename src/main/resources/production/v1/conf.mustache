@@ -41,9 +41,9 @@ deployment:
       "{{deployment:domain}}:environment": {{deployment:environment}}
       "{{deployment:domain}}:version": {{deployment:version}}
       "{{deployment:domain}}:part-of": "{{deployment:organization}}.{{deployment:name}}.{{deployment:alias}}"
-      {{#hosted:tags}}
+      {{#deployment:tags}}
       "{{key}}": "{{value}}"
-      {{/hosted:tags}}
+      {{/deployment:tags}}
 
   vpc:
     name: {{deployment:id}}-vpc

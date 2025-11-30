@@ -74,9 +74,9 @@ alarms:
       "{{deployment:domain}}:environment": {{deployment:environment}}
       "{{deployment:domain}}:version": {{deployment:version}}
       "{{deployment:domain}}:part-of": "{{deployment:organization}}.{{deployment:name}}.{{deployment:alias}}.eks"
-      {{#hosted:tags}}
+      {{#deployment:tags}}
       "{{key}}": "{{value}}"
-      {{/hosted:tags}}
+      {{/deployment:tags}}
 
   - name: {{deployment:id}}-eks-podcrashloopbackoff-warning
     description: "warning: pods are in crashloopbackoff state"
@@ -103,9 +103,9 @@ alarms:
       "{{deployment:domain}}:environment": {{deployment:environment}}
       "{{deployment:domain}}:version": {{deployment:version}}
       "{{deployment:domain}}:part-of": "{{deployment:organization}}.{{deployment:name}}.{{deployment:alias}}.eks"
-      {{#hosted:tags}}
+      {{#deployment:tags}}
       "{{key}}": "{{value}}"
-      {{/hosted:tags}}
+      {{/deployment:tags}}
 
   - name: {{deployment:id}}-eks-nodenotready-critical
     description: "critical: nodes are in notready state"
@@ -132,9 +132,9 @@ alarms:
       "{{deployment:domain}}:environment": {{deployment:environment}}
       "{{deployment:domain}}:version": {{deployment:version}}
       "{{deployment:domain}}:part-of": "{{deployment:organization}}.{{deployment:name}}.{{deployment:alias}}.eks"
-      {{#hosted:tags}}
+      {{#deployment:tags}}
       "{{key}}": "{{value}}"
-      {{/hosted:tags}}
+      {{/deployment:tags}}
 
   - name: {{deployment:id}}-eks-podfailure-warning
     description: "warning: pods are failing"
@@ -161,9 +161,9 @@ alarms:
       "{{deployment:domain}}:environment": {{deployment:environment}}
       "{{deployment:domain}}:version": {{deployment:version}}
       "{{deployment:domain}}:part-of": "{{deployment:organization}}.{{deployment:name}}.{{deployment:alias}}.eks"
-      {{#hosted:tags}}
+      {{#deployment:tags}}
       "{{key}}": "{{value}}"
-      {{/hosted:tags}}
+      {{/deployment:tags}}
 
   - name: {{deployment:id}}-eks-authentication-failure-warning
     description: "warning: high number of authentication failures"
@@ -190,9 +190,9 @@ alarms:
       "{{deployment:domain}}:environment": {{deployment:environment}}
       "{{deployment:domain}}:version": {{deployment:version}}
       "{{deployment:domain}}:part-of": "{{deployment:organization}}.{{deployment:name}}.{{deployment:alias}}.eks"
-      {{#hosted:tags}}
+      {{#deployment:tags}}
       "{{key}}": "{{value}}"
-      {{/hosted:tags}}
+      {{/deployment:tags}}
 
   - name: {{deployment:id}}-eks-nodecpuutilization-critical
     description: "critical: high cpu utilization on eks nodes"
@@ -219,9 +219,9 @@ alarms:
       "{{deployment:domain}}:environment": {{deployment:environment}}
       "{{deployment:domain}}:version": {{deployment:version}}
       "{{deployment:domain}}:part-of": "{{deployment:organization}}.{{deployment:name}}.{{deployment:alias}}.eks"
-      {{#hosted:tags}}
+      {{#deployment:tags}}
       "{{key}}": "{{value}}"
-      {{/hosted:tags}}
+      {{/deployment:tags}}
 
 dashboards:
   - name: {{deployment:id}}-eks-monitoring
@@ -1453,6 +1453,6 @@ dashboards:
       "{{deployment:domain}}:environment": "{{deployment:environment}}"
       "{{deployment:domain}}:version": "{{deployment:version}}"
       "{{deployment:domain}}:part-of": "{{deployment:organization}}.{{deployment:name}}.{{deployment:alias}}.eks"
-      {{#hosted:tags}}
+      {{#deployment:tags}}
       "{{key}}": "{{value}}"
-      {{/hosted:tags}}
+      {{/deployment:tags}}
