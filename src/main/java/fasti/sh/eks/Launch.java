@@ -26,25 +26,36 @@ public class Launch {
     var conf = get(app);
 
     new EksStack(
-        app, conf.release(),
-        StackProps.builder()
-            .stackName(name(conf.release().common().id(), "eks"))
-            .env(Environment.builder()
-                .account(conf.release().common().account())
-                .region(conf.release().common().region())
-                .build())
-            .description(describe(conf.platform(),
-                String.format("%s %s release",
-                    conf.release().common().name(), conf.release().common().alias())))
-            .tags(Common.Maps.from(conf.platform().tags(), conf.release().common().tags()))
-            .build());
+      app, conf.release(),
+      StackProps
+        .builder()
+        .stackName(name(conf.release().common().id(), "eks"))
+        .env(
+          Environment
+            .builder()
+            .account(conf.release().common().account())
+            .region(conf.release().common().region())
+            .build())
+        .description(
+          describe(
+            conf.platform(),
+            String
+              .format(
+                "%s %s release",
+                conf.release().common().name(),
+                conf.release().common().alias())))
+        .tags(Common.Maps.from(conf.platform().tags(), conf.release().common().tags()))
+        .build());
 
     app.synth();
   }
 
   @SneakyThrows
   private static Release<EksReleaseConf> get(App app) {
-    var parsed = Template.parse(app, "conf.mustache",
+    var parsed = Template
+      .parse(
+        app,
+        "conf.mustache",
         Map.ofEntries(Map.entry("deployment:tags", tags(app))));
     var type = new TypeReference<Release<EksReleaseConf>>() {};
     return Mapper.get().readValue(parsed, type);
