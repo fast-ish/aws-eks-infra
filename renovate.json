@@ -1,6 +1,17 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["addons\\.mustache$"],
+      "matchStrings": [
+        "name:\\s*(?<depName>vpc-cni|aws-ebs-csi-driver|kube-proxy|coredns|eks-pod-identity-agent|amazon-cloudwatch-observability)\\n\\s+version:\\s*(?<currentValue>v[\\d.]+-eksbuild\\.\\d+)"
+      ],
+      "datasourceTemplate": "aws-eks-addon",
+      "versioningTemplate": "loose"
+    }
+  ],
   "schedule": ["at any time"],
   "timezone": "UTC",
   "prConcurrentLimit": 5,
