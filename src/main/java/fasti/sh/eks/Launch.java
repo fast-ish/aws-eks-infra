@@ -41,7 +41,7 @@ public class Launch {
             conf.platform(),
             String
               .format(
-                "%s %s release",
+                "EKS cluster release [%s/%s] - Managed Kubernetes",
                 conf.release().common().name(),
                 conf.release().common().alias())))
         .tags(Common.Maps.from(conf.platform().tags(), conf.release().common().tags()))

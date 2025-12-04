@@ -8,16 +8,7 @@ platform:
   environment: {{platform:environment}}
   version: {{platform:version}}
   domain: {{platform:domain}}
-  tags:
-    "{{platform:domain}}:billing": {{platform:organization}}
-    "{{platform:domain}}:managed-by": {{platform:organization}}
-    "{{platform:domain}}:account": {{platform:account}}
-    "{{platform:domain}}:region": {{platform:region}}
-    "{{platform:domain}}:name": {{platform:name}}
-    "{{platform:domain}}:alias": {{platform:alias}}
-    "{{platform:domain}}:environment": {{platform:environment}}
-    "{{platform:domain}}:version": {{platform:version}}
-    "{{platform:domain}}:part-of": {{platform:organization}}-{{platform:account}}-{{platform:name}}-{{platform:alias}}
+  tags: {}
 
 release:
   common:
@@ -37,9 +28,6 @@ release:
       "{{deployment:domain}}:region": {{deployment:region}}
       "{{deployment:domain}}:name": {{deployment:team:name}}
       "{{deployment:domain}}:alias": {{deployment:team:alias}}
-      "{{deployment:domain}}:environment": {{deployment:environment}}
-      "{{deployment:domain}}:version": {{deployment:version}}
-      "{{deployment:domain}}:part-of": "{{deployment:organization}}.{{deployment:team:name}}.{{deployment:team:alias}}"
       {{#deployment:tags}}
       "{{key}}": "{{value}}"
       {{/deployment:tags}}
@@ -70,7 +58,9 @@ release:
           "{{deployment:domain}}:type": public
           "{{deployment:domain}}:cidrMask": 24
           "{{deployment:domain}}:component": {{deployment:id}}-vpc
-          "{{deployment:domain}}:part-of": "{{deployment:organization}}.{{deployment:team:name}}.{{deployment:team:alias}}"
+          "{{deployment:domain}}:organization": "{{deployment:organization}}"
+          "{{deployment:domain}}:name": "{{deployment:team:name}}"
+          "{{deployment:domain}}:alias": "{{deployment:team:alias}}"
           "karpenter.sh/discovery": {{deployment:id}}-vpc
       - name: private
         cidrMask: 24
@@ -82,7 +72,9 @@ release:
           "{{deployment:domain}}:type": private_with_egress
           "{{deployment:domain}}:cidrMask": 24
           "{{deployment:domain}}:component": {{deployment:id}}-vpc
-          "{{deployment:domain}}:part-of": "{{deployment:organization}}.{{deployment:team:name}}.{{deployment:team:alias}}"
+          "{{deployment:domain}}:organization": "{{deployment:organization}}"
+          "{{deployment:domain}}:name": "{{deployment:team:name}}"
+          "{{deployment:domain}}:alias": "{{deployment:team:alias}}"
           "karpenter.sh/discovery": {{deployment:id}}-vpc
     tags:
       "{{deployment:domain}}:resource-type": vpc
@@ -90,7 +82,9 @@ release:
       "{{deployment:domain}}:type": network
       "{{deployment:domain}}:cidrMask": 24
       "{{deployment:domain}}:component": {{deployment:id}}-vpc
-      "{{deployment:domain}}:part-of": "{{deployment:organization}}.{{deployment:team:name}}.{{deployment:team:alias}}"
+      "{{deployment:domain}}:organization": "{{deployment:organization}}"
+      "{{deployment:domain}}:name": "{{deployment:team:name}}"
+      "{{deployment:domain}}:alias": "{{deployment:team:alias}}"
 
   eks:
     name: {{deployment:id}}-eks
@@ -120,12 +114,14 @@ release:
       "{{deployment:domain}}/account": {{deployment:account}}
       "{{deployment:domain}}/region": {{deployment:region}}
       "{{deployment:domain}}/version": {{deployment:version}}
-      "{{deployment:domain}}/service": {{deployment:team:name}}
-      "{{deployment:domain}}/part-of": "{{deployment:organization}}.{{deployment:team:name}}.{{deployment:team:alias}}"
+      "{{deployment:domain}}/name": "{{deployment:team:name}}"
+      "{{deployment:domain}}/alias": "{{deployment:team:alias}}"
     tags:
       "{{deployment:domain}}:resource-type": eks
       "{{deployment:domain}}:category": eks
       "{{deployment:domain}}:type": analytics
       "{{deployment:domain}}:component": {{deployment:id}}-eks
-      "{{deployment:domain}}:part-of": "{{deployment:organization}}.{{deployment:team:name}}.{{deployment:team:alias}}"
+      "{{deployment:domain}}:organization": "{{deployment:organization}}"
+      "{{deployment:domain}}:name": "{{deployment:team:name}}"
+      "{{deployment:domain}}:alias": "{{deployment:team:alias}}"
       "karpenter.sh/discovery": {{deployment:id}}-vpc
