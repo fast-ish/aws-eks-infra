@@ -31,19 +31,17 @@ public class Launch {
         .builder()
         .stackName(name(conf.release().common().id(), "eks"))
         .env(
-          Environment
-            .builder()
+          Environment.builder()
             .account(conf.release().common().account())
             .region(conf.release().common().region())
             .build())
         .description(
           describe(
             conf.platform(),
-            String
-              .format(
-                "EKS cluster release [%s/%s] - Managed Kubernetes",
-                conf.release().common().name(),
-                conf.release().common().alias())))
+            String.format(
+              "EKS cluster release [%s/%s] - Managed Kubernetes",
+              conf.release().common().name(),
+              conf.release().common().alias())))
         .tags(Common.Maps.from(conf.platform().tags(), conf.release().common().tags()))
         .build());
 
@@ -52,11 +50,10 @@ public class Launch {
 
   @SneakyThrows
   private static Release<EksReleaseConf> get(App app) {
-    var parsed = Template
-      .parse(
-        app,
-        "conf.mustache",
-        Map.ofEntries(Map.entry("deployment:tags", tags(app))));
+    var parsed = Template.parse(
+      app,
+      "conf.mustache",
+      Map.ofEntries(Map.entry("deployment:tags", tags(app))));
     var type = new TypeReference<Release<EksReleaseConf>>() {};
     return Mapper.get().readValue(parsed, type);
   }
