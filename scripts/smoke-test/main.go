@@ -94,6 +94,8 @@ func (s *TestSuite) RunAll() {
 	s.testCoreAddons()
 	s.testSecurity()
 	s.testNetworking()
+	s.testBackupAndRecovery()
+	s.testResourceOptimization()
 	s.testObservability()
 }
 
@@ -183,6 +185,18 @@ func (s *TestSuite) testEKSCluster() {
 	} else {
 		s.warn("No NodePools configured")
 	}
+
+	// Check EC2NodeClasses
+	ec2NodeClassGVR := schema.GroupVersionResource{Group: "karpenter.k8s.aws", Version: "v1", Resource: "ec2nodeclasses"}
+	ec2NodeClasses, err := s.dynamicClient.Resource(ec2NodeClassGVR).List(ctx, metav1.ListOptions{})
+	if err == nil && len(ec2NodeClasses.Items) > 0 {
+		s.pass(fmt.Sprintf("EC2NodeClasses configured: %d", len(ec2NodeClasses.Items)))
+	} else {
+		s.warn("No EC2NodeClasses configured")
+	}
+
+	s.printSection("Node Termination Handler")
+	s.checkPodsRunning(ctx, "kube-system", "app.kubernetes.io/name=aws-node-termination-handler", "Node Termination Handler")
 }
 
 // -----------------------------------------------------------------------------
@@ -203,6 +217,9 @@ func (s *TestSuite) testCoreAddons() {
 		{"clusterpolicies.kyverno.io", "Kyverno ClusterPolicies"},
 		{"nodepools.karpenter.sh", "Karpenter NodePools"},
 		{"ec2nodeclasses.karpenter.k8s.aws", "Karpenter EC2NodeClasses"},
+		{"backups.velero.io", "Velero Backups"},
+		{"restores.velero.io", "Velero Restores"},
+		{"schedules.velero.io", "Velero Schedules"},
 	}
 	for _, crd := range crds {
 		s.checkCRDExists(ctx, crd.name, crd.display)
@@ -250,8 +267,8 @@ func (s *TestSuite) testSecurity() {
 		s.pass("ClusterSecretStore 'aws-secrets-manager'")
 	}
 
-	// Check ExternalSecrets sync status
-	esGVR := schema.GroupVersionResource{Group: "external-secrets.io", Version: "v1beta1", Resource: "externalsecrets"}
+	// Check ExternalSecrets sync status (v1 API)
+	esGVR := schema.GroupVersionResource{Group: "external-secrets.io", Version: "v1", Resource: "externalsecrets"}
 	esList, err := s.dynamicClient.Resource(esGVR).Namespace("").List(ctx, metav1.ListOptions{})
 	if err == nil {
 		synced := 0
@@ -306,6 +323,28 @@ func (s *TestSuite) testSecurity() {
 	} else {
 		s.warn("No ClusterIssuers configured")
 	}
+
+	// Check for issued certificates
+	certGVR := schema.GroupVersionResource{Group: "cert-manager.io", Version: "v1", Resource: "certificates"}
+	certs, err := s.dynamicClient.Resource(certGVR).Namespace("").List(ctx, metav1.ListOptions{})
+	if err == nil {
+		ready := 0
+		for _, cert := range certs.Items {
+			conditions, found, _ := unstructured.NestedSlice(cert.Object, "status", "conditions")
+			if found {
+				for _, c := range conditions {
+					cond := c.(map[string]interface{})
+					if cond["type"] == "Ready" && cond["status"] == "True" {
+						ready++
+						break
+					}
+				}
+			}
+		}
+		if len(certs.Items) > 0 {
+			s.pass(fmt.Sprintf("Certificates: %d total, %d ready", len(certs.Items), ready))
+		}
+	}
 }
 
 // -----------------------------------------------------------------------------
@@ -353,6 +392,118 @@ func (s *TestSuite) testNetworking() {
 		}
 		s.pass(fmt.Sprintf("Ingresses: %d total, %d with LoadBalancer", len(ingresses.Items), withLB))
 	}
+
+	s.printSection("Services")
+	services, err := s.clientset.CoreV1().Services("").List(ctx, metav1.ListOptions{})
+	if err == nil {
+		lbCount := 0
+		for _, svc := range services.Items {
+			if svc.Spec.Type == "LoadBalancer" {
+				lbCount++
+			}
+		}
+		s.pass(fmt.Sprintf("LoadBalancer services: %d", lbCount))
+	}
+}
+
+// -----------------------------------------------------------------------------
+// Backup and Recovery Tests
+// -----------------------------------------------------------------------------
+
+func (s *TestSuite) testBackupAndRecovery() {
+	s.printHeader("BACKUP AND RECOVERY")
+	ctx := context.Background()
+
+	s.printSection("Velero")
+	s.checkPodsRunning(ctx, "velero", "app.kubernetes.io/name=velero", "Velero Server")
+
+	// Check Velero service account has IRSA
+	sa, err := s.clientset.CoreV1().ServiceAccounts("velero").Get(ctx, "velero", metav1.GetOptions{})
+	if err == nil && sa.Annotations != nil {
+		if roleArn, ok := sa.Annotations["eks.amazonaws.com/role-arn"]; ok && roleArn != "" {
+			s.pass("Velero has IRSA configured")
+		} else {
+			s.warn("Velero missing IRSA annotation")
+		}
+	}
+
+	// Check backup storage locations
+	bslGVR := schema.GroupVersionResource{Group: "velero.io", Version: "v1", Resource: "backupstoragelocations"}
+	bsls, err := s.dynamicClient.Resource(bslGVR).Namespace("velero").List(ctx, metav1.ListOptions{})
+	if err == nil && len(bsls.Items) > 0 {
+		available := 0
+		for _, bsl := range bsls.Items {
+			phase, found, _ := unstructured.NestedString(bsl.Object, "status", "phase")
+			if found && phase == "Available" {
+				available++
+			}
+		}
+		s.pass(fmt.Sprintf("BackupStorageLocations: %d total, %d available", len(bsls.Items), available))
+	} else {
+		s.warn("No BackupStorageLocations configured")
+	}
+
+	// Check scheduled backups
+	scheduleGVR := schema.GroupVersionResource{Group: "velero.io", Version: "v1", Resource: "schedules"}
+	schedules, err := s.dynamicClient.Resource(scheduleGVR).Namespace("velero").List(ctx, metav1.ListOptions{})
+	if err == nil {
+		if len(schedules.Items) > 0 {
+			s.pass(fmt.Sprintf("Backup schedules: %d", len(schedules.Items)))
+		} else {
+			s.warn("No backup schedules configured")
+		}
+	}
+
+	// Check recent backups
+	backupGVR := schema.GroupVersionResource{Group: "velero.io", Version: "v1", Resource: "backups"}
+	backups, err := s.dynamicClient.Resource(backupGVR).Namespace("velero").List(ctx, metav1.ListOptions{})
+	if err == nil && len(backups.Items) > 0 {
+		completed := 0
+		for _, backup := range backups.Items {
+			phase, found, _ := unstructured.NestedString(backup.Object, "status", "phase")
+			if found && phase == "Completed" {
+				completed++
+			}
+		}
+		s.pass(fmt.Sprintf("Backups: %d total, %d completed", len(backups.Items), completed))
+	}
+}
+
+// -----------------------------------------------------------------------------
+// Resource Optimization Tests
+// -----------------------------------------------------------------------------
+
+func (s *TestSuite) testResourceOptimization() {
+	s.printHeader("RESOURCE OPTIMIZATION")
+	ctx := context.Background()
+
+	s.printSection("Goldilocks (VPA Recommendations)")
+	s.checkPodsRunning(ctx, "goldilocks", "app.kubernetes.io/name=goldilocks", "Goldilocks Controller")
+
+	// Check VPA CRD exists
+	s.checkCRDExists(ctx, "verticalpodautoscalers.autoscaling.k8s.io", "VPA CRD")
+
+	// Check for VPA resources
+	vpaGVR := schema.GroupVersionResource{Group: "autoscaling.k8s.io", Version: "v1", Resource: "verticalpodautoscalers"}
+	vpas, err := s.dynamicClient.Resource(vpaGVR).Namespace("").List(ctx, metav1.ListOptions{})
+	if err == nil {
+		if len(vpas.Items) > 0 {
+			s.pass(fmt.Sprintf("VPAs configured: %d", len(vpas.Items)))
+		} else {
+			s.warn("No VPAs configured (Goldilocks may create them automatically)")
+		}
+	}
+
+	// Check goldilocks dashboard service
+	_, err = s.clientset.CoreV1().Services("goldilocks").Get(ctx, "goldilocks-dashboard", metav1.GetOptions{})
+	if err == nil {
+		s.pass("Goldilocks dashboard service exists")
+	} else {
+		s.warn("Goldilocks dashboard service not found")
+	}
+
+	s.printSection("Reloader (ConfigMap/Secret Watcher)")
+	s.checkPodsRunning(ctx, "reloader", "app.kubernetes.io/name=reloader", "Reloader")
 }
 
 // -----------------------------------------------------------------------------
@@ -374,12 +525,23 @@ func (s *TestSuite) testObservability() {
 		s.warn("Metrics API not available")
 	}
 
+	// Test node metrics
+	nodeMetricsGVR := schema.GroupVersionResource{Group: "metrics.k8s.io", Version: "v1beta1", Resource: "nodes"}
+	nodeMetrics, err := s.dynamicClient.Resource(nodeMetricsGVR).List(ctx, metav1.ListOptions{})
+	if err == nil && len(nodeMetrics.Items) > 0 {
+		s.pass(fmt.Sprintf("Node metrics available: %d nodes", len(nodeMetrics.Items)))
+	} else {
+		s.warn("Node metrics not available")
+	}
+
 	s.printSection("Container Insights")
 	// Check CloudWatch agent
 	s.checkPodsRunning(ctx, "amazon-cloudwatch", "app.kubernetes.io/name=cloudwatch-agent", "CloudWatch Agent")
 
-	s.printSection("Grafana Monitoring")
-	pods, err := s.clientset.CoreV1().Pods("monitoring").List(ctx, metav1.ListOptions{})
+	// Check Fluent Bit (if used)
+	pods, err := s.clientset.CoreV1().Pods("amazon-cloudwatch").List(ctx, metav1.ListOptions{
+		LabelSelector: "app.kubernetes.io/name=fluent-bit",
+	})
 	if err == nil && len(pods.Items) > 0 {
 		running := 0
 		for _, pod := range pods.Items {
@@ -388,12 +550,46 @@ func (s *TestSuite) testObservability() {
 			}
 		}
 		if running > 0 {
-			s.pass(fmt.Sprintf("Monitoring pods: %d running", running))
+			s.pass(fmt.Sprintf("Fluent Bit: %d running", running))
+		}
+	}
+
+	s.printSection("Grafana Cloud Monitoring (k8s-monitoring)")
+	s.checkPodsRunning(ctx, "monitoring", "app.kubernetes.io/name=alloy-logs", "Alloy Logs")
+	s.checkPodsRunning(ctx, "monitoring", "app.kubernetes.io/name=alloy-metrics", "Alloy Metrics")
+	s.checkPodsRunning(ctx, "monitoring", "app.kubernetes.io/name=alloy-singleton", "Alloy Singleton")
+	s.checkPodsRunning(ctx, "monitoring", "app.kubernetes.io/name=kube-state-metrics", "Kube State Metrics")
+	s.checkPodsRunning(ctx, "monitoring", "app.kubernetes.io/name=node-exporter", "Node Exporter")
+
+	// Check monitoring namespace pods summary
+	pods, err = s.clientset.CoreV1().Pods("monitoring").List(ctx, metav1.ListOptions{})
+	if err == nil && len(pods.Items) > 0 {
+		running := 0
+		for _, pod := range pods.Items {
+			if pod.Status.Phase == "Running" {
+				running++
+			}
+		}
+		if running > 0 {
+			s.pass(fmt.Sprintf("Monitoring namespace pods: %d running", running))
 		} else {
 			s.warn("Monitoring pods: none running")
 		}
 	} else {
 		s.warn("Monitoring namespace/pods not found")
+	}
+
+	// Check for Grafana ingress
+	ingresses, err := s.clientset.NetworkingV1().Ingresses("monitoring").List(ctx, metav1.ListOptions{})
+	if err == nil {
+		for _, ing := range ingresses.Items {
+			if len(ing.Spec.Rules) > 0 {
+				host := ing.Spec.Rules[0].Host
+				if host != "" {
+					s.pass(fmt.Sprintf("Grafana ingress: %s", host))
+				}
+			}
+		}
 	}
 }
 
