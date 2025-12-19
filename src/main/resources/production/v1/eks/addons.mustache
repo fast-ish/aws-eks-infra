@@ -142,7 +142,7 @@ karpenter:
     values: helm/karpenter.mustache
   podIdentity:
     metadata:
-      name: {{deployment:id}}-karpenter-sa
+      name: karpenter
       namespace: kube-system
       labels:
         "{{deployment:domain}}/resource-type": service-account
@@ -249,9 +249,9 @@ awsLoadBalancer:
     version: 1.16.0
     namespace: aws-load-balancer
     values: helm/aws-load-balancer.mustache
-  serviceAccount:
+  podIdentity:
     metadata:
-      name: {{deployment:id}}-aws-load-balancer-sa
+      name: aws-load-balancer-controller
       namespace: aws-load-balancer
       labels:
         "{{deployment:domain}}/resource-type": service-account
@@ -264,6 +264,10 @@ awsLoadBalancer:
       annotations: { }
     role:
       name: {{deployment:id}}-aws-load-balancer-sa
+      principal:
+        type: service
+        value: pods.eks.amazonaws.com
+        action: sts:AssumeRole
       managedPolicyNames: [ ]
       customPolicies:
         - name: {{deployment:id}}-aws-load-balancer-controller
@@ -297,7 +301,7 @@ externalDns:
   txtOwnerId: {{deployment:id}}
   domainFilters:
     - {{deployment:domain}}
-  serviceAccount:
+  podIdentity:
     metadata:
       name: external-dns
       namespace: external-dns
@@ -312,6 +316,10 @@ externalDns:
       annotations: { }
     role:
       name: {{deployment:id}}-external-dns-sa
+      principal:
+        type: service
+        value: pods.eks.amazonaws.com
+        action: sts:AssumeRole
       managedPolicyNames: [ ]
       customPolicies:
         - name: {{deployment:id}}-external-dns
@@ -333,7 +341,7 @@ externalSecrets:
     version: 1.1.1
     namespace: external-secrets
     values: helm/external-secrets.mustache
-  serviceAccount:
+  podIdentity:
     metadata:
       name: external-secrets
       namespace: external-secrets
@@ -348,6 +356,10 @@ externalSecrets:
       annotations: { }
     role:
       name: {{deployment:id}}-external-secrets-sa
+      principal:
+        type: service
+        value: pods.eks.amazonaws.com
+        action: sts:AssumeRole
       managedPolicyNames: [ ]
       customPolicies:
         - name: {{deployment:id}}-external-secrets-access
@@ -392,7 +404,7 @@ velero:
   bucket:
     name: {{deployment:id}}-velero-backups
     region: {{deployment:region}}
-  serviceAccount:
+  podIdentity:
     metadata:
       name: velero
       namespace: velero
@@ -407,6 +419,10 @@ velero:
       annotations: { }
     role:
       name: {{deployment:id}}-velero-sa
+      principal:
+        type: service
+        value: pods.eks.amazonaws.com
+        action: sts:AssumeRole
       managedPolicyNames: [ ]
       customPolicies:
         - name: {{deployment:id}}-velero

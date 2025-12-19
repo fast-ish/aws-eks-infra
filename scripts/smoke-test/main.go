@@ -371,16 +371,6 @@ func (s *TestSuite) testNetworking() {
 	s.printSection("External DNS")
 	s.checkPodsRunning(ctx, "external-dns", "app.kubernetes.io/name=external-dns", "External DNS")
 
-	// Check service account has IRSA
-	sa, err := s.clientset.CoreV1().ServiceAccounts("external-dns").Get(ctx, "external-dns", metav1.GetOptions{})
-	if err == nil && sa.Annotations != nil {
-		if roleArn, ok := sa.Annotations["eks.amazonaws.com/role-arn"]; ok && roleArn != "" {
-			s.pass("External DNS has IRSA configured")
-		} else {
-			s.warn("External DNS missing IRSA annotation")
-		}
-	}
-
 	s.printSection("Ingresses")
 	ingresses, err := s.clientset.NetworkingV1().Ingresses("").List(ctx, metav1.ListOptions{})
 	if err == nil {
@@ -416,16 +406,6 @@ func (s *TestSuite) testBackupAndRecovery() {
 
 	s.printSection("Velero")
 	s.checkPodsRunning(ctx, "velero", "app.kubernetes.io/name=velero", "Velero Server")
-
-	// Check Velero service account has IRSA
-	sa, err := s.clientset.CoreV1().ServiceAccounts("velero").Get(ctx, "velero", metav1.GetOptions{})
-	if err == nil && sa.Annotations != nil {
-		if roleArn, ok := sa.Annotations["eks.amazonaws.com/role-arn"]; ok && roleArn != "" {
-			s.pass("Velero has IRSA configured")
-		} else {
-			s.warn("Velero missing IRSA annotation")
-		}
-	}
 
 	// Check backup storage locations
 	bslGVR := schema.GroupVersionResource{Group: "velero.io", Version: "v1", Resource: "backupstoragelocations"}
