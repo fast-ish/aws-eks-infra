@@ -4,8 +4,8 @@ settings:
   clusterName: {{deployment:id}}-eks
   interruptionQueue: {{deployment:id}}-karpenter
 serviceAccount:
-  create: false
-  name: {{deployment:id}}-karpenter-sa
+  create: true
+  name: karpenter
 serviceMonitor:
   enabled: false
 logLevel: debug
