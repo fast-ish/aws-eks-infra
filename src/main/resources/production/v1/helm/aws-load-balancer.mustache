@@ -2,8 +2,8 @@ nodeSelector:
   "eks.amazonaws.com/nodegroup": {{deployment:id}}-core-node
 clusterName: {{deployment:id}}-eks
 serviceAccount:
-  create: false
-  name: {{deployment:id}}-aws-load-balancer-sa
+  create: true
+  name: aws-load-balancer-controller
 enableServiceMutatorWebhook: false
 serviceMonitor:
   enabled: false
