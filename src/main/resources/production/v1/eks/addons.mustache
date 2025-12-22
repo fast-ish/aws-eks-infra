@@ -2,7 +2,7 @@ managed:
   # https://docs.aws.amazon.com/eks/latest/userguide/eks-add-ons.html#workloads-add-ons-available-eks
   awsVpcCni:
     name: vpc-cni
-    version: v1.20.5-eksbuild.1
+version: v1.21.1-eksbuild.1
     preserveOnDelete: false
     resolveConflicts: overwrite
     serviceAccount:
@@ -33,7 +33,7 @@ managed:
           "{{deployment:domain}}:alias": "{{deployment:team:alias}}"
   awsEbsCsi:
     name: aws-ebs-csi-driver
-    version: v1.53.0-eksbuild.1
+version: v1.54.0-eksbuild.1
     preserveOnDelete: false
     resolveConflicts: overwrite
     serviceAccount:
@@ -78,22 +78,22 @@ managed:
       removalPolicy: destroy
   kubeProxy:
     name: kube-proxy
-    version: v1.34.1-eksbuild.2
+version: v1.34.1-eksbuild.2
     preserveOnDelete: false
     resolveConflicts: overwrite
   coreDns:
     name: coredns
-    version: v1.12.4-eksbuild.1
+version: v1.12.4-eksbuild.1
     preserveOnDelete: false
     resolveConflicts: overwrite
   podIdentityAgent:
     name: eks-pod-identity-agent
-    version: v1.3.10-eksbuild.1
+version: v1.3.10-eksbuild.2
     preserveOnDelete: false
     resolveConflicts: overwrite
   containerInsights:
     name: amazon-cloudwatch-observability
-    version: v5.0.0-eksbuild.1
+version: v5.0.0-eksbuild.1
     preserveOnDelete: false
     resolveConflicts: overwrite
     serviceAccount:
