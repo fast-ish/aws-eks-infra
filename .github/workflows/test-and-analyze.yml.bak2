@@ -66,11 +66,19 @@ jobs:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           cache: maven
 
-      - name: Download cdk-common artifacts
-        uses: actions/download-artifact@v4
+      - name: cache maven dependencies
+        uses: actions/cache@v4
         with:
-          name: cdk-common-build
-          path: ~/.m2/repository/
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: build cdk-common dependency
+        run: |
+          git clone https://github.com/fast-ish/cdk-common.git /tmp/cdk-common
+          cd /tmp/cdk-common
+          mvn clean install -DskipTests -B
 
       - name: compile project
         run: mvn clean compile -B
@@ -113,11 +121,11 @@ jobs:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           cache: maven
 
-      - name: Download cdk-common artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: cdk-common-build
-          path: ~/.m2/repository/
+      - name: build cdk-common dependency
+        run: |
+          git clone https://github.com/fast-ish/cdk-common.git /tmp/cdk-common
+          cd /tmp/cdk-common
+          mvn clean install -DskipTests -B
 
       - name: run tests with JaCoCo coverage
         run: mvn clean test jacoco:report -B || true
@@ -178,11 +186,11 @@ jobs:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           cache: maven
 
-      - name: Download cdk-common artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: cdk-common-build
-          path: ~/.m2/repository/
+      - name: build cdk-common dependency
+        run: |
+          git clone https://github.com/fast-ish/cdk-common.git /tmp/cdk-common
+          cd /tmp/cdk-common
+          mvn clean install -DskipTests -B
 
       - name: run spotbugs analysis
         run: |
@@ -220,11 +228,11 @@ jobs:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           cache: maven
 
-      - name: Download cdk-common artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: cdk-common-build
-          path: ~/.m2/repository/
+      - name: build cdk-common dependency
+        run: |
+          git clone https://github.com/fast-ish/cdk-common.git /tmp/cdk-common
+          cd /tmp/cdk-common
+          mvn clean install -DskipTests -B
 
       - name: run pmd analysis
         run: |
@@ -265,11 +273,11 @@ jobs:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           cache: maven
 
-      - name: Download cdk-common artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: cdk-common-build
-          path: ~/.m2/repository/
+      - name: build cdk-common dependency
+        run: |
+          git clone https://github.com/fast-ish/cdk-common.git /tmp/cdk-common
+          cd /tmp/cdk-common
+          mvn clean install -DskipTests -B
 
       - name: run checkstyle
         run: mvn clean checkstyle:checkstyle -B || true
@@ -340,11 +348,11 @@ jobs:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           cache: maven
 
-      - name: Download cdk-common artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: cdk-common-build
-          path: ~/.m2/repository/
+      - name: build cdk-common dependency
+        run: |
+          git clone https://github.com/fast-ish/cdk-common.git /tmp/cdk-common
+          cd /tmp/cdk-common
+          mvn clean install -DskipTests -B
 
       - name: analyze dependencies
         run: |
