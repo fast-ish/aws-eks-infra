@@ -79,7 +79,6 @@ jobs:
           # Setup helm repos
           helm repo add jetstack https://charts.jetstack.io 2>/dev/null || true
           helm repo add aws https://aws.github.io/eks-charts 2>/dev/null || true
-          helm repo add karpenter https://charts.karpenter.sh 2>/dev/null || true
           helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/ 2>/dev/null || true
           helm repo add external-dns https://kubernetes-sigs.github.io/external-dns/ 2>/dev/null || true
           helm repo add external-secrets https://charts.external-secrets.io 2>/dev/null || true
@@ -99,7 +98,6 @@ jobs:
           # Check helm charts
           declare -A HELM_CHARTS=(
             ["certManager"]="jetstack/cert-manager"
-            ["karpenter"]="karpenter/karpenter"
             ["awsLoadBalancer"]="aws/aws-load-balancer-controller"
             ["metricsServer"]="metrics-server/metrics-server"
             ["externalDns"]="external-dns/external-dns"
@@ -185,7 +183,6 @@ jobs:
           # Setup helm repos
           helm repo add jetstack https://charts.jetstack.io 2>/dev/null || true
           helm repo add aws https://aws.github.io/eks-charts 2>/dev/null || true
-          helm repo add karpenter https://charts.karpenter.sh 2>/dev/null || true
           helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/ 2>/dev/null || true
           helm repo add external-dns https://kubernetes-sigs.github.io/external-dns/ 2>/dev/null || true
           helm repo add external-secrets https://charts.external-secrets.io 2>/dev/null || true
@@ -219,7 +216,6 @@ jobs:
           # Update each helm chart
           declare -A HELM_CHARTS=(
             ["certManager"]="jetstack/cert-manager"
-            ["karpenter"]="karpenter/karpenter"
             ["awsLoadBalancer"]="aws/aws-load-balancer-controller"
             ["metricsServer"]="metrics-server/metrics-server"
             ["externalDns"]="external-dns/external-dns"
