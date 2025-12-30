@@ -2,7 +2,7 @@ managed:
   # https://docs.aws.amazon.com/eks/latest/userguide/eks-add-ons.html#workloads-add-ons-available-eks
   awsVpcCni:
     name: vpc-cni
-    version: v1.20.5-eksbuild.1
+    version: v1.21.1-eksbuild.1
     preserveOnDelete: false
     resolveConflicts: overwrite
     serviceAccount:
@@ -33,7 +33,7 @@ managed:
           "{{deployment:domain}}:alias": "{{deployment:team:alias}}"
   awsEbsCsi:
     name: aws-ebs-csi-driver
-    version: v1.53.0-eksbuild.1
+    version: v1.54.0-eksbuild.1
     preserveOnDelete: false
     resolveConflicts: overwrite
     serviceAccount:
@@ -88,7 +88,7 @@ managed:
     resolveConflicts: overwrite
   podIdentityAgent:
     name: eks-pod-identity-agent
-    version: v1.3.10-eksbuild.1
+    version: v1.3.10-eksbuild.2
     preserveOnDelete: false
     resolveConflicts: overwrite
   containerInsights:
@@ -128,7 +128,7 @@ certManager:
     name: cert-manager
     repository: https://charts.jetstack.io
     release: cert-manager
-    version: v1.19.1
+    version: v1.19.2
     namespace: cert-manager
     values: helm/cert-manager.mustache
   clusterIssuer: eks/cluster-issuer.mustache
@@ -137,7 +137,7 @@ karpenter:
     name: karpenter
     repository: oci://public.ecr.aws/karpenter/karpenter
     release: karpenter
-    version: 1.8.2
+    version: 0.16.3
     namespace: kube-system
     values: helm/karpenter.mustache
   podIdentity:
@@ -246,7 +246,7 @@ awsLoadBalancer:
     name: aws-load-balancer-controller
     repository: https://aws.github.io/eks-charts
     release: aws-load-balancer-controller
-    version: 1.16.0
+    version: 1.17.0
     namespace: aws-load-balancer
     values: helm/aws-load-balancer.mustache
   podIdentity:
@@ -338,7 +338,7 @@ externalSecrets:
     name: external-secrets
     repository: https://charts.external-secrets.io
     release: external-secrets
-    version: 1.1.1
+    version: 1.2.0
     namespace: external-secrets
     values: helm/external-secrets.mustache
   podIdentity:
@@ -398,7 +398,7 @@ velero:
     name: velero
     repository: https://vmware-tanzu.github.io/helm-charts
     release: velero
-    version: 11.2.0
+    version: 11.3.1
     namespace: velero
     values: helm/velero.mustache
   bucket:
@@ -444,7 +444,7 @@ goldilocks:
     name: goldilocks
     repository: https://charts.fairwinds.com/stable
     release: goldilocks
-    version: 10.1.0
+    version: 10.2.0
     namespace: goldilocks
     values: helm/goldilocks.mustache
 nodeTerminationHandler:
@@ -460,7 +460,7 @@ grafana:
     name: k8s-monitoring
     repository: https://grafana.github.io/helm-charts
     release: k8s-monitoring
-    version: 3.6.2
+    version: 3.7.1
     namespace: monitoring
     values: helm/grafana.mustache
   secret: {{deployment:eks:grafana:secret}}
