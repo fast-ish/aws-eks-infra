@@ -15,7 +15,7 @@
       "customType": "regex",
       "fileMatch": ["addons\\.mustache$"],
       "matchStrings": [
-        "chart:\\n\\s+name:\\s*(?<depName>cert-manager|karpenter|aws-load-balancer-controller|metrics-server|external-dns|external-secrets|reloader|kyverno|velero|goldilocks|aws-node-termination-handler|k8s-monitoring)\\n\\s+repository:\\s*(?<registryUrl>https?://[^\\s]+)\\n\\s+release:[^\\n]+\\n(?<indentation>\\s+)version:\\s*(?<currentValue>[^\\s]+)"
+        "chart:\\n\\s+name:\\s*(?<depName>cert-manager|aws-load-balancer-controller|metrics-server|external-dns|external-secrets|reloader|kyverno|velero|goldilocks|aws-node-termination-handler|k8s-monitoring)\\n\\s+repository:\\s*(?<registryUrl>https?://[^\\s]+)\\n\\s+release:[^\\n]+\\n(?<indentation>\\s+)version:\\s*(?<currentValue>[^\\s]+)"
       ],
       "datasourceTemplate": "helm"
     }
