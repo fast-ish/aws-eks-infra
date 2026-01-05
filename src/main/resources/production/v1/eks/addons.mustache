@@ -137,7 +137,7 @@ karpenter:
     name: karpenter
     repository: oci://public.ecr.aws/karpenter/karpenter
     release: karpenter
-    version: 1.8.2
+    version: 1.8.3
     namespace: kube-system
     values: helm/karpenter.mustache
   podIdentity:
@@ -295,7 +295,7 @@ externalDns:
     name: external-dns
     repository: https://kubernetes-sigs.github.io/external-dns/
     release: external-dns
-    version: 1.19.0
+    version: 1.20.0
     namespace: external-dns
     values: helm/external-dns.mustache
   txtOwnerId: {{deployment:id}}
@@ -338,7 +338,7 @@ externalSecrets:
     name: external-secrets
     repository: https://charts.external-secrets.io
     release: external-secrets
-    version: 1.2.0
+    version: 1.2.1
     namespace: external-secrets
     values: helm/external-secrets.mustache
   podIdentity:
