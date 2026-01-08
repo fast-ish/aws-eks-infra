@@ -79,6 +79,19 @@
     "@aws-cdk/aws-elasticloadbalancingV2:albDualstackWithoutPublicIpv4SecurityGroupRulesDefault": true,
     "@aws-cdk/aws-iam:oidcRejectUnauthorizedConnections": true,
     "@aws-cdk/core:enableAdditionalMetadataCollection": true,
-    "@aws-cdk/aws-lambda:createNewPoliciesWithAddToRolePolicy": true
+    "@aws-cdk/aws-lambda:createNewPoliciesWithAddToRolePolicy": true,
+    "@aws-cdk/core:newStyleStackSynthesis": true,
+    "@aws-cdk/core:stackRelativeExports": true,
+    "aws-cdk:enableDiffNoFail": true
+  },
+  "build": {
+    "exclude": [
+      "cdk.out",
+      "node_modules",
+      ".git",
+      "*.backup",
+      "*.log",
+      "target"
+    ]
   }
 }
