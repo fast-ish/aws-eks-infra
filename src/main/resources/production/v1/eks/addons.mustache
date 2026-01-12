@@ -137,7 +137,7 @@ karpenter:
     name: karpenter
     repository: oci://public.ecr.aws/karpenter/karpenter
     release: karpenter
-    version: 1.8.2
+    version: 1.8.3
     namespace: kube-system
     values: helm/karpenter.mustache
   podIdentity:
@@ -246,7 +246,7 @@ awsLoadBalancer:
     name: aws-load-balancer-controller
     repository: https://aws.github.io/eks-charts
     release: aws-load-balancer-controller
-    version: 1.17.0
+    version: 1.17.1
     namespace: aws-load-balancer
     values: helm/aws-load-balancer.mustache
   podIdentity:
@@ -295,7 +295,7 @@ externalDns:
     name: external-dns
     repository: https://kubernetes-sigs.github.io/external-dns/
     release: external-dns
-    version: 1.19.0
+    version: 1.20.0
     namespace: external-dns
     values: helm/external-dns.mustache
   txtOwnerId: {{deployment:id}}
@@ -338,7 +338,7 @@ externalSecrets:
     name: external-secrets
     repository: https://charts.external-secrets.io
     release: external-secrets
-    version: 1.2.0
+    version: 1.2.1
     namespace: external-secrets
     values: helm/external-secrets.mustache
   podIdentity:
@@ -390,7 +390,7 @@ kyverno:
     name: kyverno
     repository: https://kyverno.github.io/kyverno
     release: kyverno
-    version: 3.6.1
+    version: 3.6.2
     namespace: kyverno
     values: helm/kyverno.mustache
 velero:
@@ -398,7 +398,7 @@ velero:
     name: velero
     repository: https://vmware-tanzu.github.io/helm-charts
     release: velero
-    version: 11.3.1
+    version: 11.3.2
     namespace: velero
     values: helm/velero.mustache
   bucket:
