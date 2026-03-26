@@ -1,0 +1,64 @@
+# kube-linter configuration
+# Documentation: https://docs.kubelinter.io/#/configuring-kubelinter
+
+checks:
+  # Enable all built-in checks
+  addAllBuiltIn: true
+
+  # Exclude checks that don't apply to our infrastructure components
+  exclude:
+    # Some system DaemonSets (Cilium, Falco) require privileged access
+    - "privileged-container"
+
+    # Some workloads need writable root filesystem (logs, caches)
+    - "no-read-only-root-fs"
+
+    # Many infrastructure components run as root by design
+    - "run-as-non-root"
+
+    # Allow dropping all capabilities (some charts do this by default)
+    - "drop-net-raw-capability"
+
+    # Default service accounts are commonly used in Helm charts
+    - "default-service-account"
+
+    # Some infrastructure components don't need liveness/readiness probes
+    - "no-liveness-probe"
+    - "no-readiness-probe"
+
+    # Anti-affinity rules are handled by Karpenter and topology spread
+    - "no-anti-affinity"
+
+    # Some charts legitimately use latest tag for development
+    - "latest-tag"
+
+    # Resource requirements warnings (we handle this in OPA policies)
+    - "unset-cpu-requirements"
+    - "unset-memory-requirements"
+
+    # Some system workloads need host PID namespace
+    - "host-pid"
+
+    # Some workloads need host IPC namespace
+    - "host-ipc"
+
+    # Some system workloads legitimately need host network
+    - "host-network"
+
+    # Deprecated API warning (handled by pluto)
+    - "deprecated-service-account-field"
+
+    # SSH port warning (we don't expose SSH)
+    - "ssh-port"
+
+    # Writable host mount (some CSI drivers need this)
+    - "writable-host-mount"
+
+    # Sensitive host mounts (CSI and CNI need these)
+    - "sensitive-host-mounts"
+
+# Custom check configurations
+customChecks: []
+
+# Ignore paths (if needed)
+ignorePaths: []

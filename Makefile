@@ -85,3 +85,38 @@ pre-commit: ## Run pre-commit checks
 
 .PHONY: all
 all: clean build test quality ## Run everything
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Manifest Validation Targets
+# ═══════════════════════════════════════════════════════════════════════════════
+
+.PHONY: validate-tools
+validate-tools: ## Install manifest validation tools
+	@scripts/validation/install-tools.sh
+
+.PHONY: validate-render
+validate-render: ## Render Helm charts to manifests
+	@scripts/validation/render-helm.sh
+
+.PHONY: validate-schema
+validate-schema: ## Run kubeconform schema validation
+	@scripts/validation/kubeconform.sh
+
+.PHONY: validate-lint
+validate-lint: ## Run kube-linter best practices check
+	@scripts/validation/kube-linter.sh
+
+.PHONY: validate-deprecations
+validate-deprecations: ## Run pluto API deprecation check
+	@scripts/validation/pluto.sh
+
+.PHONY: validate-policies
+validate-policies: ## Run conftest OPA policy validation
+	@scripts/validation/conftest.sh
+
+.PHONY: validate-manifests
+validate-manifests: ## Run all manifest validations
+	@scripts/validation/validate-all.sh
+
+.PHONY: validate-all
+validate-all: build test validate-manifests ## Run build, tests, and manifest validation
